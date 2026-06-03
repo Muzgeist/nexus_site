@@ -1,58 +1,174 @@
 <!DOCTYPE html>
-
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Perfil do Usuário</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nexus Imports — Meu Perfil</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Exo+2:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/nexus-shared.css">
+  <link rel="stylesheet" href="../css/telausuario.css">
 </head>
 <body>
 
-<main>
-    <div class="perfil">
+<div class="nexus-bg" aria-hidden="true"></div>
 
-```
-    <h2>Meu Perfil</h2>
+<div class="page-wrapper">
 
-    <!-- SUBSTITUIR src PELO CAMINHO DA FOTO VINDA DO BANCO -->
-    <div class="foto-perfil">
-        <img
+  <header class="nexus-header">
+    <div class="logo-icon">N</div>
+    <span class="logo-text">NEXUS IMPORTS</span>
+    <nav class="header-nav">
+      <a href="telacarrinho.html" class="nav-link">Carrinho</a>
+      <a href="telacompras.html" class="nav-link">Compras</a>
+    </nav>
+  </header>
+
+  <main class="usuario-main">
+
+    <!-- Avatar com grande destaque -->
+    <section class="avatar-hero reveal">
+      <div class="avatar-ring-outer">
+        <div class="avatar-ring-inner">
+          <img
             id="fotoPerfil"
             src="/imagens/foto-padrao.png"
             alt="Foto de Perfil"
-            width="150"
-            height="150"
-        >
-    </div>
+            class="avatar-img"
+            onerror="this.style.display='none'; document.getElementById('avatarFallback').style.display='flex';"
+          >
+          <div class="avatar-fallback" id="avatarFallback">
+            <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+              <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+      <!-- Nome aparece logo abaixo da foto -->
+      <div class="avatar-name-wrap">
+        <h1 class="avatar-name" id="displayNome">Nome do Usuário</h1>
+        <span class="avatar-tag">Nexus Member</span>
+      </div>
+    </section>
 
-    <div class="campo">
-        <label>Nome:</label>
-        <!-- SUBSTITUIR PELO NOME VINDO DO BANCO -->
-        <p id="nome">Nome do Usuário</p>
-    </div>
+    <!-- Campos do perfil, revelados progressivamente -->
+    <section class="perfil-campos">
 
-    <div class="campo">
-        <label>E-mail:</label>
-        <!-- SUBSTITUIR PELO EMAIL VINDO DO BANCO -->
-        <p id="email">usuario@email.com</p>
-    </div>
+      <div class="perfil-campo reveal reveal-delay-1" data-field="nome">
+        <div class="campo-header">
+          <span class="campo-icone">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+            </svg>
+          </span>
+          <span class="campo-rotulo">Nome</span>
+          <button class="btn-editar" aria-label="Editar nome">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+            </svg>
+          </button>
+        </div>
+        <div class="campo-valor-wrap">
+          <p class="campo-valor" id="nome">Nome do Usuário</p>
+          <div class="campo-edit-wrap" style="display:none">
+            <input type="text" class="campo-input" value="Nome do Usuário" autocomplete="name">
+            <div class="edit-actions">
+              <button class="btn-save">Salvar</button>
+              <button class="btn-cancel">Cancelar</button>
+            </div>
+          </div>
+        </div>
+      </div>
 
-    <div class="campo">
-        <label>CPF/CNPJ:</label>
-        <!-- SUBSTITUIR PELO CPF/CNPJ VINDO DO BANCO -->
-        <p id="cpf">000.000.000-00</p>
-    </div>
+      <div class="perfil-campo reveal reveal-delay-2" data-field="email">
+        <div class="campo-header">
+          <span class="campo-icone">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="4" width="20" height="16" rx="3"/><path d="M2 8l10 6 10-6"/>
+            </svg>
+          </span>
+          <span class="campo-rotulo">E-mail</span>
+          <button class="btn-editar" aria-label="Editar e-mail">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+            </svg>
+          </button>
+        </div>
+        <div class="campo-valor-wrap">
+          <p class="campo-valor" id="email">usuario@email.com</p>
+          <div class="campo-edit-wrap" style="display:none">
+            <input type="email" class="campo-input" value="usuario@email.com" autocomplete="email">
+            <div class="edit-actions">
+              <button class="btn-save">Salvar</button>
+              <button class="btn-cancel">Cancelar</button>
+            </div>
+          </div>
+        </div>
+      </div>
 
-    <div class="campo">
-        <label>Telefone:</label>
-        <!-- SUBSTITUIR PELO TELEFONE VINDO DO BANCO -->
-        <p id="telefone">(00) 00000-0000</p>
-    </div>
+      <div class="perfil-campo reveal reveal-delay-3" data-field="cpf">
+        <div class="campo-header">
+          <span class="campo-icone">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 8h10M7 12h7"/>
+            </svg>
+          </span>
+          <span class="campo-rotulo">CPF / CNPJ</span>
+          <button class="btn-editar" aria-label="Editar CPF">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+            </svg>
+          </button>
+        </div>
+        <div class="campo-valor-wrap">
+          <p class="campo-valor" id="cpf">000.000.000-00</p>
+          <div class="campo-edit-wrap" style="display:none">
+            <input type="text" class="campo-input" value="000.000.000-00" maxlength="18">
+            <div class="edit-actions">
+              <button class="btn-save">Salvar</button>
+              <button class="btn-cancel">Cancelar</button>
+            </div>
+          </div>
+        </div>
+      </div>
 
+      <div class="perfil-campo reveal reveal-delay-4" data-field="telefone">
+        <div class="campo-header">
+          <span class="campo-icone">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/>
+            </svg>
+          </span>
+          <span class="campo-rotulo">Telefone</span>
+          <button class="btn-editar" aria-label="Editar telefone">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+            </svg>
+          </button>
+        </div>
+        <div class="campo-valor-wrap">
+          <p class="campo-valor" id="telefone">(00) 00000-0000</p>
+          <div class="campo-edit-wrap" style="display:none">
+            <input type="tel" class="campo-input" value="(00) 00000-0000" maxlength="15" autocomplete="tel">
+            <div class="edit-actions">
+              <button class="btn-save">Salvar</button>
+              <button class="btn-cancel">Cancelar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
 </div>
-```
 
-</main>
-
+<script src="../js/nexus-shared.js"></script>
+<script src="../js/telausuario.js"></script>
 </body>
 </html>
