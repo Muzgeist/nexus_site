@@ -1,0 +1,375 @@
+/* ============================================
+   NEXUS — Tela de Cadastro
+   ============================================ */
+
+.cadastro-main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px 60px;
+}
+
+.cadastro-container {
+  width: 100%;
+  max-width: 680px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  padding: 48px 48px 52px;
+  box-shadow:
+    var(--shadow-card),
+    0 0 80px rgba(124,0,224,0.08);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+}
+
+/* ── Header ─────────────────────────────────── */
+.cadastro-header {
+  text-align: center;
+  margin-bottom: 36px;
+}
+
+.cadastro-title {
+  font-family: var(--font-display);
+  font-size: clamp(22px, 4vw, 30px);
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  background: linear-gradient(135deg, var(--text-primary) 30%, var(--pink-bright) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 8px;
+}
+
+.cadastro-sub {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+/* ── Avatar (Discord-style) ─────────────────── */
+.avatar-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 32px;
+}
+
+.avatar-btn-wrap { position: relative; }
+
+.avatar-btn {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  border: 2.5px solid var(--border-subtle);
+  background: rgba(45, 5, 75, 0.6);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  transition: var(--transition-mid);
+  box-shadow: 0 0 0 0 var(--violet-glow);
+}
+
+.avatar-btn:hover {
+  border-color: var(--purple-400);
+  box-shadow: 0 0 24px var(--violet-glow), 0 0 0 4px rgba(187,134,252,0.12);
+  transform: scale(1.05);
+  color: var(--text-primary);
+}
+
+.avatar-placeholder { display: flex; align-items: center; justify-content: center; }
+
+.avatar-preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.avatar-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(92,0,179,0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity var(--transition-mid);
+  color: white;
+}
+
+.avatar-btn:hover .avatar-overlay { opacity: 1; }
+
+.avatar-input {
+  position: absolute;
+  width: 0;
+  height: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.avatar-label {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.avatar-btn.has-photo {
+  border-color: var(--purple-400);
+  box-shadow: 0 0 20px var(--violet-glow);
+}
+
+/* ── Grid de Campos ─────────────────────────── */
+.campos-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.campo--full { grid-column: 1 / -1; }
+
+/* ── Campo Individual ───────────────────────── */
+.campo { display: flex; flex-direction: column; gap: 6px; }
+
+.campo-label {
+  font-family: var(--font-body);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  transition: color var(--transition-fast);
+}
+
+.campo:focus-within .campo-label {
+  color: var(--purple-300);
+}
+
+.campo-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.campo-wrap input {
+  width: 100%;
+  background: rgba(20, 0, 35, 0.7);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 13px 44px 13px 42px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--text-primary);
+  outline: none;
+  transition: var(--transition-mid);
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.campo-wrap input::placeholder { color: var(--text-muted); opacity: 0.7; }
+
+/* Focus */
+.campo-wrap input:focus {
+  border-color: var(--purple-400);
+  background: rgba(25, 0, 45, 0.85);
+  box-shadow: 0 0 0 3px rgba(157, 51, 255, 0.15), 0 0 20px rgba(157,51,255,0.08);
+  transform: translateY(-1px);
+}
+
+/* Valid */
+.campo.valid .campo-wrap input {
+  border-color: var(--purple-500);
+  background: rgba(92, 0, 179, 0.08);
+  box-shadow: 0 0 0 2px rgba(124,0,224,0.18), 0 0 16px rgba(124,0,224,0.1);
+  color: var(--purple-200);
+}
+
+/* Invalid (touched & empty) */
+.campo.invalid .campo-wrap input {
+  border-color: var(--error);
+  background: rgba(255, 45, 85, 0.06);
+  box-shadow: 0 0 0 2px var(--error-glow);
+}
+
+/* Icon left */
+.campo-icon {
+  position: absolute;
+  left: 13px;
+  display: flex;
+  align-items: center;
+  color: var(--text-muted);
+  pointer-events: none;
+  transition: color var(--transition-fast);
+}
+
+.campo.valid .campo-icon { color: var(--purple-400); }
+.campo.invalid .campo-icon { color: var(--error); }
+.campo-wrap input:focus ~ .campo-icon { color: var(--purple-300); }
+
+/* Status icon right */
+.campo-status {
+  position: absolute;
+  right: 13px;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+
+.campo.valid .campo-status::after {
+  content: '✓';
+  color: var(--purple-400);
+  opacity: 1;
+  font-weight: 700;
+}
+
+.campo.invalid .campo-status::after {
+  content: '✕';
+  color: var(--error);
+  opacity: 1;
+}
+
+.campo.valid .campo-status,
+.campo.invalid .campo-status { opacity: 1; }
+
+/* Mensagem de erro */
+.campo-msg {
+  font-size: 11.5px;
+  font-family: var(--font-body);
+  color: var(--error);
+  min-height: 16px;
+  padding-left: 2px;
+  transition: opacity var(--transition-fast);
+}
+
+/* Senha toggle */
+.senha-toggle {
+  position: absolute;
+  right: 36px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  padding: 4px;
+  transition: color var(--transition-fast);
+  z-index: 2;
+}
+
+.senha-toggle:hover { color: var(--purple-300); }
+.campo.valid .campo-wrap .campo-status { right: 32px; }
+
+/* Password strength */
+.senha-strength {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 6px;
+  opacity: 0;
+  transition: opacity var(--transition-mid);
+}
+
+.campo[data-field="senha"].typing .senha-strength { opacity: 1; }
+
+.strength-bar {
+  flex: 1;
+  height: 3px;
+  background: rgba(255,255,255,0.08);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.strength-fill {
+  height: 100%;
+  width: 0%;
+  border-radius: var(--radius-full);
+  transition: width 0.4s ease, background 0.4s ease;
+}
+
+.strength-label {
+  font-size: 11px;
+  font-weight: 600;
+  font-family: var(--font-body);
+  white-space: nowrap;
+  color: var(--text-muted);
+}
+
+/* ── Form Footer ────────────────────────────── */
+.form-footer {
+  margin-top: 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.btn-cadastrar {
+  width: 100%;
+  max-width: 320px;
+  padding: 16px 32px;
+  font-size: 14px;
+  letter-spacing: 0.18em;
+}
+
+.login-link {
+  font-size: 13px;
+  font-family: var(--font-body);
+  color: var(--text-muted);
+}
+
+.login-link a {
+  color: var(--pink-bright);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color var(--transition-fast);
+}
+
+.login-link a:hover {
+  color: var(--purple-200);
+  text-shadow: 0 0 12px var(--pink-glow);
+}
+
+/* ── Floating-lift on focus ─────────────────── */
+.campo-wrap input:focus {
+  transform: translateY(-1px);
+}
+
+.campo-wrap { transition: var(--transition-mid); }
+
+/* ── Responsivo ─────────────────────────────── */
+@media (max-width: 640px) {
+  .cadastro-container {
+    padding: 32px 24px 40px;
+    border-radius: var(--radius-lg);
+  }
+
+  .campos-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .campo--full { grid-column: 1; }
+
+  .cadastro-title { font-size: 22px; }
+}
+
+@media (max-width: 400px) {
+  .cadastro-container { padding: 24px 16px 32px; }
+  .avatar-btn { width: 80px; height: 80px; }
+}
