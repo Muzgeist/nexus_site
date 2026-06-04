@@ -17,7 +17,7 @@
 <div class="page-wrapper">
 
   <header class="nexus-header">
-    <div class="logo-icon">N</div>
+    <div class="logo-icon"><img src="../img/nexus-logo.png" alt="Nexus Logo"></div>
     <span class="logo-text">NEXUS IMPORTS</span>
     <nav class="header-nav">
       <a href="telacarrinho.html" class="nav-link">Carrinho</a>
@@ -27,32 +27,37 @@
 
   <main class="usuario-main">
 
-    <!-- Avatar com grande destaque -->
+    <!-- Avatar hero com edição de foto -->
     <section class="avatar-hero reveal">
-      <div class="avatar-ring-outer">
-        <div class="avatar-ring-inner">
-          <img
-            id="fotoPerfil"
-            src="/imagens/foto-padrao.png"
-            alt="Foto de Perfil"
-            class="avatar-img"
-            onerror="this.style.display='none'; document.getElementById('avatarFallback').style.display='flex';"
-          >
-          <div class="avatar-fallback" id="avatarFallback">
-            <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
-              <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
-            </svg>
+      <div class="avatar-edit-wrap" id="avatarEditWrap" title="Clique para alterar foto">
+        <div class="avatar-ring-outer">
+          <div class="avatar-ring-inner">
+            <img id="fotoPerfil" src="" alt="Foto de Perfil" class="avatar-img" style="display:none;">
+            <div class="avatar-fallback" id="avatarFallback">
+              <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+                <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+              </svg>
+            </div>
           </div>
         </div>
+        <!-- Overlay câmera ao hover -->
+        <div class="avatar-camera-overlay" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+            <circle cx="12" cy="13" r="4"/>
+          </svg>
+          <span>Alterar foto</span>
+        </div>
+        <input type="file" id="fotoInput" accept="image/*" style="display:none;" aria-label="Selecionar foto">
       </div>
-      <!-- Nome aparece logo abaixo da foto -->
+
       <div class="avatar-name-wrap">
         <h1 class="avatar-name" id="displayNome">Nome do Usuário</h1>
         <span class="avatar-tag">Nexus Member</span>
       </div>
     </section>
 
-    <!-- Campos do perfil, revelados progressivamente -->
+    <!-- Campos do perfil -->
     <section class="perfil-campos">
 
       <div class="perfil-campo reveal reveal-delay-1" data-field="nome">

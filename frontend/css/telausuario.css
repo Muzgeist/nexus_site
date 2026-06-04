@@ -57,6 +57,48 @@
   width: 100%;
 }
 
+/* Wrapper clicável da foto */
+.avatar-edit-wrap {
+  position: relative;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+.avatar-edit-wrap:hover .avatar-ring-outer {
+  box-shadow: 0 0 60px var(--pink-glow), 0 0 100px rgba(224,64,251,0.3);
+}
+
+/* Overlay câmera */
+.avatar-camera-overlay {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: rgba(10, 0, 20, 0.72);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  color: var(--text-primary);
+  opacity: 0;
+  transition: opacity var(--transition-mid);
+  z-index: 10;
+  backdrop-filter: blur(2px);
+  pointer-events: none;
+}
+
+.avatar-camera-overlay span {
+  font-family: var(--font-display);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--pink-bright);
+  white-space: nowrap;
+}
+
+.avatar-edit-wrap:hover .avatar-camera-overlay { opacity: 1; }
+
 /* Anel externo animado */
 .avatar-ring-outer {
   width: 152px;

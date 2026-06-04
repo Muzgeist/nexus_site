@@ -158,14 +158,20 @@ body {
 }
 
 .nexus-header .logo-icon {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--pink-neon), var(--purple-500));
-  display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 0 16px var(--pink-glow);
-  font-size: 18px; font-weight: 900; color: white;
-  font-family: var(--font-display);
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  filter: drop-shadow(0 0 8px rgba(224,64,251,0.55));
+  flex-shrink: 0;
+}
+
+.nexus-header .logo-icon img,
+.nexus-header .logo-icon svg {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .nexus-header .logo-text {
