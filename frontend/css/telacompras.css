@@ -1,0 +1,440 @@
+/* ============================================
+   NEXUS — Tela de Compras
+   Layout: blocos à esquerda com separador roxo brilhante
+   ============================================ */
+
+/* Nav reutilizada do carrinho */
+.header-nav {
+  margin-left: auto;
+  display: flex;
+  gap: 24px;
+}
+
+.nav-link {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+  position: relative;
+  padding-bottom: 2px;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1.5px;
+  background: var(--pink-neon);
+  transition: width var(--transition-mid);
+  box-shadow: 0 0 8px var(--pink-glow);
+}
+
+.nav-link:hover { color: var(--text-primary); }
+.nav-link:hover::after { width: 100%; }
+
+/* ── Main Layout ────────────────────────────── */
+.compras-main {
+  flex: 1;
+  max-width: 860px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 48px 32px 80px;
+}
+
+.compras-hero {
+  margin-bottom: 40px;
+}
+
+.page-title {
+  font-family: var(--font-display);
+  font-size: clamp(20px, 3.5vw, 28px);
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: var(--text-primary);
+}
+
+/* ── Lista de Compras ───────────────────────── */
+.compras-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 0; /* separação visual via borda/glow */
+}
+
+/* ── Card de Compra ─────────────────────────── */
+.compra-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 3px; /* pequena lacuna entre cards */
+  transition: var(--transition-mid);
+  position: relative;
+  box-shadow: var(--shadow-card);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* Separador brilhante entre cards */
+.compra-card + .compra-card {
+  border-top-color: transparent;
+}
+
+.compra-card + .compra-card::before {
+  content: '';
+  display: block;
+  height: 2px;
+  width: 100%;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(157,51,255,0.7) 20%,
+    rgba(224,64,251,1) 50%,
+    rgba(157,51,255,0.7) 80%,
+    transparent 100%
+  );
+  box-shadow: 0 0 12px rgba(224,64,251,0.5), 0 0 4px rgba(224,64,251,0.9);
+  position: absolute;
+  top: -3px;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.compra-card:hover {
+  border-color: rgba(187, 134, 252, 0.3);
+  transform: translateX(6px);
+  box-shadow: var(--shadow-card), -6px 0 24px rgba(92,0,179,0.2);
+}
+
+/* Acento lateral colorido */
+.compra-accent {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: linear-gradient(180deg, var(--purple-500), var(--pink-neon));
+  box-shadow: 2px 0 12px rgba(157,51,255,0.4);
+}
+
+.compra-accent--done {
+  background: linear-gradient(180deg, #7c00e0, #bb86fc);
+  box-shadow: 2px 0 12px rgba(187,134,252,0.4);
+}
+
+.compra-accent--transit {
+  background: linear-gradient(180deg, #ff6b35, #ffd60a);
+  box-shadow: 2px 0 12px rgba(255, 107, 53, 0.4);
+}
+
+/* ── Topo do card ───────────────────────────── */
+.compra-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 22px 14px 24px;
+  border-bottom: 1px solid var(--border-subtle);
+  gap: 12px;
+}
+
+.compra-numero {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: var(--text-primary);
+}
+
+/* Status badges */
+.compra-status {
+  font-family: var(--font-display);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border-radius: var(--radius-full);
+  padding: 4px 14px;
+  border: 1px solid;
+}
+
+.compra-status--separacao {
+  color: var(--pink-bright);
+  background: rgba(224,64,251,0.1);
+  border-color: rgba(224,64,251,0.35);
+  box-shadow: 0 0 10px rgba(224,64,251,0.15);
+}
+
+.compra-status--entregue {
+  color: var(--purple-300);
+  background: rgba(187,134,252,0.1);
+  border-color: rgba(187,134,252,0.3);
+  box-shadow: 0 0 10px rgba(187,134,252,0.15);
+}
+
+.compra-status--transito {
+  color: #ffd60a;
+  background: rgba(255,214,10,0.08);
+  border-color: rgba(255,214,10,0.3);
+  box-shadow: 0 0 10px rgba(255,214,10,0.12);
+}
+
+/* ── Body do card ───────────────────────────── */
+.compra-body {
+  display: flex;
+  gap: 0;
+  padding: 18px 22px 18px 24px;
+  flex-wrap: wrap;
+}
+
+.compra-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  min-width: 120px;
+  padding-right: 24px;
+}
+
+.compra-field + .compra-field {
+  border-left: 1px solid var(--border-subtle);
+  padding-left: 24px;
+}
+
+.field-label {
+  font-family: var(--font-body);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.field-value {
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.field-value--price {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--purple-200);
+  text-shadow: 0 0 12px rgba(187,134,252,0.3);
+}
+
+/* ── Botão Cancelar Pedido ──────────────────── */
+.btn-cancelar-compra {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-display);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 85, 100, 0.75);
+  background: rgba(255, 45, 85, 0.06);
+  border: 1px solid rgba(255, 45, 85, 0.2);
+  border-radius: var(--radius-sm);
+  padding: 6px 13px;
+  cursor: pointer;
+  transition: var(--transition-fast);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.btn-cancelar-compra:hover:not(:disabled) {
+  background: rgba(255, 45, 85, 0.16);
+  border-color: var(--error);
+  color: var(--error);
+  box-shadow: 0 0 16px var(--error-glow);
+}
+
+.btn-cancelar--disabled {
+  opacity: 0.28;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Card cancelado */
+.compra-card--cancelado {
+  opacity: 0.45;
+  filter: grayscale(0.5);
+  pointer-events: none;
+}
+
+.compra-card--cancelado .compra-status {
+  color: var(--text-muted) !important;
+  background: rgba(255,255,255,0.04) !important;
+  border-color: rgba(255,255,255,0.1) !important;
+  box-shadow: none !important;
+}
+
+/* ── Modal de Confirmação ───────────────────── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(5, 0, 12, 0.82);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-mid);
+}
+
+.modal-overlay.open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.modal-box {
+  background: var(--bg-card);
+  border: 1px solid rgba(255, 45, 85, 0.25);
+  border-radius: var(--radius-xl);
+  padding: 40px 36px 36px;
+  max-width: 380px;
+  width: 100%;
+  text-align: center;
+  box-shadow:
+    0 0 60px rgba(255, 45, 85, 0.12),
+    0 24px 64px rgba(0,0,0,0.7),
+    0 0 0 1px rgba(255,255,255,0.04);
+  transform: scale(0.92) translateY(12px);
+  transition: transform var(--transition-slow);
+}
+
+.modal-overlay.open .modal-box {
+  transform: scale(1) translateY(0);
+}
+
+.modal-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: rgba(255, 45, 85, 0.1);
+  border: 1.5px solid rgba(255, 45, 85, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  color: var(--error);
+  box-shadow: 0 0 24px var(--error-glow);
+}
+
+.modal-title {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+}
+
+.modal-desc {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-bottom: 28px;
+}
+
+.modal-desc strong {
+  color: var(--purple-200);
+  font-weight: 700;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.btn-modal-cancel {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 11px 24px;
+  cursor: pointer;
+  transition: var(--transition-fast);
+  flex: 1;
+}
+
+.btn-modal-cancel:hover {
+  color: var(--text-primary);
+  border-color: rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.08);
+}
+
+.btn-modal-confirm {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: white;
+  background: linear-gradient(135deg, #c0182b, #ff2d55);
+  border: 1px solid rgba(255,45,85,0.4);
+  border-radius: var(--radius-md);
+  padding: 11px 24px;
+  cursor: pointer;
+  transition: var(--transition-fast);
+  flex: 1;
+  box-shadow: 0 4px 16px rgba(255,45,85,0.25);
+}
+
+.btn-modal-confirm:hover {
+  box-shadow: 0 6px 24px rgba(255,45,85,0.45);
+  transform: translateY(-1px);
+}
+
+/* ── Responsivo ─────────────────────────────── */
+@media (max-width: 600px) {
+  .compras-main { padding: 32px 16px 60px; }
+
+  .compra-top { flex-wrap: wrap; }
+
+  .btn-cancelar-compra {
+    margin-left: 0;
+    width: 100%;
+    justify-content: center;
+    margin-top: 8px;
+  }
+
+  .compra-body {
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .compra-field + .compra-field {
+    border-left: none;
+    border-top: 1px solid var(--border-subtle);
+    padding-left: 0;
+    padding-top: 14px;
+  }
+
+  .header-nav { display: none; }
+
+  .modal-box { padding: 32px 24px 28px; }
+  .modal-actions { flex-direction: column; }
+}

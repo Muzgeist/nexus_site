@@ -1,54 +1,204 @@
 <!DOCTYPE html>
-
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meu Carrinho</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nexus Imports — Carrinho</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Exo+2:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/nexus-shared.css">
+  <link rel="stylesheet" href="../css/telacarrinho.css">
 </head>
 <body>
 
-<main>
-    <div class="carrinho">
+<div class="nexus-bg nexus-bg--light" aria-hidden="true"></div>
 
-```
-    <h2>Pedidos em Aberto</h2>
+<!-- Toast de feedback -->
+<div class="toast" id="toast" aria-live="polite"></div>
 
-    <!--
-        ESTA ÁREA DEVERÁ SER PREENCHIDA
-        COM OS PRODUTOS VINDOS DO BANCO DE DADOS
-    -->
+<div class="page-wrapper">
 
-    <div id="lista-pedidos">
+  <header class="nexus-header">
+    <div class="logo-icon"><img src="../img/nexus-logo.png" alt="Nexus Logo"></div>
+    <span class="logo-text">NEXUS IMPORTS</span>
+    <nav class="header-nav">
+      <a href="telausuario.html" class="nav-link">Perfil</a>
+      <a href="telacompras.html" class="nav-link">Compras</a>
+    </nav>
+  </header>
 
-        <div class="pedido">
-            <p><strong>Produto:</strong> Nome do Produto</p>
-            <p><strong>Quantidade:</strong> 1</p>
-        </div>
+  <main class="carrinho-main">
 
-        <hr>
+    <!-- Hero com contagem e botão COMPRAR TUDO no topo -->
+    <div class="carrinho-hero reveal">
+      <div class="hero-left">
+        <h1 class="page-title">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="vertical-align:middle;margin-right:10px">
+            <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+            <path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/>
+          </svg>
+          Meu Carrinho
+        </h1>
+        <span class="badge-count" id="badgeCount">0 itens</span>
+      </div>
 
-        <div class="pedido">
-            <p><strong>Produto:</strong> Nome do Produto</p>
-            <p><strong>Quantidade:</strong> 2</p>
-        </div>
-
+      <!-- BOTÃO COMPRAR TUDO — destaque máximo -->
+      <button type="button" class="btn-nexus btn-comprar-tudo" id="btnComprarTudo">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="flex-shrink:0">
+          <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <path d="M16 10a4 4 0 0 1-8 0"/>
+        </svg>
+        <span>Comprar Tudo</span>
+      </button>
     </div>
 
-    <hr>
+    <!-- Grid de produtos (máx. 3 por linha) -->
+    <section class="produtos-grid reveal reveal-delay-1" id="lista-pedidos" aria-label="Produtos no carrinho">
 
-    <div class="resumo">
-        <!-- SUBSTITUIR PELO TOTAL DE ITENS -->
-        <p><strong>Total de Itens:</strong> <span id="totalItens">0</span></p>
+      <!-- EXEMPLO — remover quando backend integrado -->
+      <!-- Estrutura padrão de card: data-estoque define o limite de quantidade -->
+      <article class="produto-card reveal" data-estoque="10">
+        <div class="produto-img-wrap">
+          <div class="produto-img-placeholder">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+              <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>
+            </svg>
+          </div>
+        </div>
+        <div class="produto-info">
+          <span class="produto-categoria">GPU</span>
+          <h3 class="produto-nome">RTX 4080 Super</h3>
+          <!-- Controle de quantidade editável -->
+          <div class="produto-qty-ctrl">
+            <button class="qty-btn qty-btn--minus" aria-label="Diminuir quantidade">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </button>
+            <input
+              type="number"
+              class="qty-input"
+              value="1"
+              min="1"
+              max="10"
+              aria-label="Quantidade"
+            >
+            <button class="qty-btn qty-btn--plus" aria-label="Aumentar quantidade">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </button>
+            <span class="qty-estoque" aria-label="Estoque disponível">/ 10 em estoque</span>
+          </div>
+        </div>
+        <div class="produto-actions">
+          <button class="btn-comprar-individual" aria-label="Comprar este produto">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/>
+            </svg>
+            Comprar
+          </button>
+          <button class="btn-remove" aria-label="Remover produto">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/>
+            </svg>
+          </button>
+        </div>
+      </article>
+
+      <article class="produto-card reveal reveal-delay-1" data-estoque="5">
+        <div class="produto-img-wrap">
+          <div class="produto-img-placeholder">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+              <rect x="2" y="6" width="20" height="12" rx="2"/><path d="M22 10H2M6 14h.01M10 14h.01"/>
+            </svg>
+          </div>
+        </div>
+        <div class="produto-info">
+          <span class="produto-categoria">RAM</span>
+          <h3 class="produto-nome">DDR5 32GB Kit</h3>
+          <div class="produto-qty-ctrl">
+            <button class="qty-btn qty-btn--minus" aria-label="Diminuir quantidade">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </button>
+            <input type="number" class="qty-input" value="2" min="1" max="5" aria-label="Quantidade">
+            <button class="qty-btn qty-btn--plus" aria-label="Aumentar quantidade">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </button>
+            <span class="qty-estoque">/ 5 em estoque</span>
+          </div>
+        </div>
+        <div class="produto-actions">
+          <button class="btn-comprar-individual" aria-label="Comprar este produto">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/>
+            </svg>
+            Comprar
+          </button>
+          <button class="btn-remove" aria-label="Remover produto">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/>
+            </svg>
+          </button>
+        </div>
+      </article>
+
+      <article class="produto-card reveal reveal-delay-2" data-estoque="3">
+        <div class="produto-img-wrap">
+          <div class="produto-img-placeholder">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+              <rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 9h6M9 12h6M9 15h4"/>
+            </svg>
+          </div>
+        </div>
+        <div class="produto-info">
+          <span class="produto-categoria">SSD</span>
+          <h3 class="produto-nome">NVMe 2TB Gen5</h3>
+          <div class="produto-qty-ctrl">
+            <button class="qty-btn qty-btn--minus" aria-label="Diminuir quantidade">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </button>
+            <input type="number" class="qty-input" value="1" min="1" max="3" aria-label="Quantidade">
+            <button class="qty-btn qty-btn--plus" aria-label="Aumentar quantidade">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </button>
+            <span class="qty-estoque">/ 3 em estoque</span>
+          </div>
+        </div>
+        <div class="produto-actions">
+          <button class="btn-comprar-individual" aria-label="Comprar este produto">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/>
+            </svg>
+            Comprar
+          </button>
+          <button class="btn-remove" aria-label="Remover produto">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/>
+            </svg>
+          </button>
+        </div>
+      </article>
+      <!-- /EXEMPLO -->
+
+    </section>
+
+    <!-- Resumo -->
+    <div class="carrinho-resumo reveal reveal-delay-2">
+      <div class="resumo-card">
+        <div class="resumo-row">
+          <span>Total de itens</span>
+          <strong id="totalItens">3</strong>
+        </div>
+        <div class="resumo-divider"></div>
+        <button type="button" class="btn-nexus btn-finalizar" id="btnFinalizar">
+          <span>Finalizar Pedido</span>
+        </button>
+      </div>
     </div>
 
-    <!-- FUTURAMENTE PODE REDIRECIONAR PARA O CHECKOUT -->
-    <button type="button">Finalizar Pedido</button>
-
+  </main>
 </div>
-```
 
-</main>
-
+<script src="../js/nexus-shared.js"></script>
+<script src="../js/telacarrinho.js"></script>
 </body>
 </html>

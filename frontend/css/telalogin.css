@@ -1,0 +1,244 @@
+/* ============================================
+   NEXUS — Tela de Login
+   ============================================ */
+
+.login-main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px 60px;
+}
+
+.login-container {
+  width: 100%;
+  max-width: 440px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  padding: 52px 44px 56px;
+  box-shadow: var(--shadow-card), 0 0 80px rgba(124,0,224,0.1);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Orb decorativo */
+.login-orb {
+  position: absolute;
+  top: -60px;
+  right: -60px;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(224,64,251,0.18) 0%, transparent 70%);
+  animation: orbPulse 6s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes orbPulse {
+  0%, 100% { transform: scale(1); opacity: 0.8; }
+  50%       { transform: scale(1.15); opacity: 1; }
+}
+
+/* ── Header ─────────────────────────────────── */
+.login-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.login-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(92,0,179,0.6), rgba(224,64,251,0.3));
+  border: 1.5px solid rgba(187,134,252,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+  color: var(--purple-300);
+  box-shadow: 0 0 24px rgba(157,51,255,0.2);
+}
+
+.login-title {
+  font-family: var(--font-display);
+  font-size: clamp(20px, 4vw, 26px);
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  background: linear-gradient(135deg, var(--text-primary) 30%, var(--pink-bright) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 6px;
+}
+
+.login-sub {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+/* ── Stack de campos ────────────────────────── */
+.campos-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ── Campo ─────────────────────────────────── */
+.campo { display: flex; flex-direction: column; gap: 6px; }
+
+.campo-label {
+  font-family: var(--font-body);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: color var(--transition-fast);
+}
+
+.campo:focus-within .campo-label { color: var(--purple-300); }
+
+.forgot-link {
+  font-size: 11px;
+  color: var(--pink-bright);
+  text-decoration: none;
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: 0;
+  transition: color var(--transition-fast);
+}
+.forgot-link:hover { color: var(--purple-200); }
+
+.campo-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.campo-wrap input {
+  width: 100%;
+  background: rgba(20, 0, 35, 0.7);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 14px 44px 14px 44px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--text-primary);
+  outline: none;
+  transition: var(--transition-mid);
+  appearance: none;
+}
+
+.campo-wrap input::placeholder { color: var(--text-muted); opacity: 0.7; }
+
+.campo-wrap input:focus {
+  border-color: var(--purple-400);
+  background: rgba(25, 0, 45, 0.9);
+  box-shadow: 0 0 0 3px rgba(157,51,255,0.15), 0 0 20px rgba(157,51,255,0.08);
+  transform: translateY(-1px);
+}
+
+.campo.valid .campo-wrap input {
+  border-color: var(--purple-500);
+  background: rgba(92,0,179,0.1);
+  box-shadow: 0 0 0 2px rgba(124,0,224,0.2);
+  color: var(--purple-200);
+}
+
+.campo.invalid .campo-wrap input {
+  border-color: var(--error);
+  background: rgba(255,45,85,0.06);
+  box-shadow: 0 0 0 2px var(--error-glow);
+}
+
+.campo-icon {
+  position: absolute;
+  left: 14px;
+  display: flex;
+  align-items: center;
+  color: var(--text-muted);
+  pointer-events: none;
+  transition: color var(--transition-fast);
+}
+
+.campo.valid .campo-icon { color: var(--purple-400); }
+.campo.invalid .campo-icon { color: var(--error); }
+
+.campo-status {
+  position: absolute;
+  right: 13px;
+  font-size: 13px;
+  font-weight: 700;
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+
+.campo.valid .campo-status::after   { content: '✓'; color: var(--purple-400); }
+.campo.invalid .campo-status::after { content: '✕'; color: var(--error); }
+.campo.valid .campo-status,
+.campo.invalid .campo-status { opacity: 1; }
+
+.campo-msg {
+  font-size: 11.5px;
+  font-family: var(--font-body);
+  color: var(--error);
+  min-height: 16px;
+}
+
+.senha-toggle {
+  position: absolute;
+  right: 36px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  padding: 4px;
+  transition: color var(--transition-fast);
+  z-index: 2;
+}
+.senha-toggle:hover { color: var(--purple-300); }
+
+/* ── Footer ─────────────────────────────────── */
+.form-footer {
+  margin-top: 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.btn-login {
+  width: 100%;
+  padding: 16px;
+  font-size: 14px;
+  letter-spacing: 0.18em;
+}
+
+.register-link {
+  font-size: 13px;
+  font-family: var(--font-body);
+  color: var(--text-muted);
+}
+
+.register-link a {
+  color: var(--pink-bright);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color var(--transition-fast);
+}
+.register-link a:hover {
+  color: var(--purple-200);
+  text-shadow: 0 0 12px var(--pink-glow);
+}
+
+@media (max-width: 480px) {
+  .login-container { padding: 40px 24px 44px; }
+}

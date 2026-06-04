@@ -1,50 +1,155 @@
 <!DOCTYPE html>
-
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minhas Compras</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nexus Imports — Minhas Compras</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Exo+2:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/nexus-shared.css">
+  <link rel="stylesheet" href="../css/telacompras.css">
 </head>
 <body>
 
-<main>
-    <div class="compras">
+<div class="nexus-bg" aria-hidden="true"></div>
 
-```
-    <h2>Minhas Compras</h2>
+<!-- Modal de confirmação de cancelamento -->
+<div class="modal-overlay" id="modalOverlay" aria-hidden="true">
+  <div class="modal-box">
+    <div class="modal-icon">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+      </svg>
+    </div>
+    <h3 class="modal-title">Cancelar Pedido?</h3>
+    <p class="modal-desc">Esta ação não pode ser desfeita. O pedido <strong id="modalPedidoNum">#0000</strong> será cancelado.</p>
+    <div class="modal-actions">
+      <button class="btn-modal-cancel" id="btnModalCancel">Voltar</button>
+      <button class="btn-modal-confirm" id="btnModalConfirm">Sim, cancelar</button>
+    </div>
+  </div>
+</div>
 
-    <!--
-        ESTA ÁREA DEVERÁ SER PREENCHIDA
-        COM AS COMPRAS VINDAS DO BANCO DE DADOS
-    -->
+<div class="page-wrapper">
 
-    <div id="lista-compras">
+  <header class="nexus-header">
+    <div class="logo-icon"><img src="../img/nexus-logo.png" alt="Nexus Logo"></div>
+    <span class="logo-text">NEXUS IMPORTS</span>
+    <nav class="header-nav">
+      <a href="telacarrinho.html" class="nav-link">Carrinho</a>
+      <a href="telausuario.html" class="nav-link">Perfil</a>
+    </nav>
+  </header>
 
-        <div class="compra">
-            <p><strong>Pedido:</strong> #0001</p>
-            <p><strong>Produto:</strong> Nome do Produto</p>
-            <p><strong>Quantidade:</strong> 2</p>
-            <p><strong>Valor Total:</strong> R$ 100,00</p>
-            <p><strong>Status:</strong> Em Separação</p>
-        </div>
+  <main class="compras-main">
 
-        <hr>
-
-        <div class="compra">
-            <p><strong>Pedido:</strong> #0002</p>
-            <p><strong>Produto:</strong> Outro Produto</p>
-            <p><strong>Quantidade:</strong> 1</p>
-            <p><strong>Valor Total:</strong> R$ 50,00</p>
-            <p><strong>Status:</strong> Entregue</p>
-        </div>
-
+    <div class="compras-hero reveal">
+      <h1 class="page-title">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="vertical-align:middle;margin-right:10px">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <line x1="16" y1="13" x2="8" y2="13"/>
+          <line x1="16" y1="17" x2="8" y2="17"/>
+        </svg>
+        Minhas Compras
+      </h1>
     </div>
 
+    <section class="compras-lista" id="lista-compras">
+
+      <!-- EXEMPLO — backend irá preencher -->
+      <article class="compra-card reveal reveal-delay-1" data-pedido="#0001">
+        <div class="compra-accent"></div>
+        <div class="compra-top">
+          <span class="compra-numero">#0001</span>
+          <span class="compra-status compra-status--separacao">Em Separação</span>
+          <button class="btn-cancelar-compra" aria-label="Cancelar pedido #0001">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>
+            </svg>
+            Cancelar Pedido
+          </button>
+        </div>
+        <div class="compra-body">
+          <div class="compra-field">
+            <span class="field-label">Produto</span>
+            <span class="field-value">Nome do Produto</span>
+          </div>
+          <div class="compra-field">
+            <span class="field-label">Quantidade</span>
+            <span class="field-value">2</span>
+          </div>
+          <div class="compra-field">
+            <span class="field-label">Valor Total</span>
+            <span class="field-value field-value--price">R$ 100,00</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="compra-card reveal reveal-delay-2" data-pedido="#0002">
+        <div class="compra-accent compra-accent--done"></div>
+        <div class="compra-top">
+          <span class="compra-numero">#0002</span>
+          <span class="compra-status compra-status--entregue">Entregue</span>
+          <!-- Pedido entregue não pode ser cancelado -->
+          <button class="btn-cancelar-compra btn-cancelar--disabled" disabled aria-label="Não é possível cancelar pedido entregue">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>
+            </svg>
+            Cancelar Pedido
+          </button>
+        </div>
+        <div class="compra-body">
+          <div class="compra-field">
+            <span class="field-label">Produto</span>
+            <span class="field-value">Outro Produto</span>
+          </div>
+          <div class="compra-field">
+            <span class="field-label">Quantidade</span>
+            <span class="field-value">1</span>
+          </div>
+          <div class="compra-field">
+            <span class="field-label">Valor Total</span>
+            <span class="field-value field-value--price">R$ 50,00</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="compra-card reveal reveal-delay-3" data-pedido="#0003">
+        <div class="compra-accent compra-accent--transit"></div>
+        <div class="compra-top">
+          <span class="compra-numero">#0003</span>
+          <span class="compra-status compra-status--transito">Em Trânsito</span>
+          <button class="btn-cancelar-compra" aria-label="Cancelar pedido #0003">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>
+            </svg>
+            Cancelar Pedido
+          </button>
+        </div>
+        <div class="compra-body">
+          <div class="compra-field">
+            <span class="field-label">Produto</span>
+            <span class="field-value">Terceiro Produto</span>
+          </div>
+          <div class="compra-field">
+            <span class="field-label">Quantidade</span>
+            <span class="field-value">3</span>
+          </div>
+          <div class="compra-field">
+            <span class="field-label">Valor Total</span>
+            <span class="field-value field-value--price">R$ 280,00</span>
+          </div>
+        </div>
+      </article>
+
+    </section>
+
+  </main>
 </div>
-```
 
-</main>
-
+<script src="../js/nexus-shared.js"></script>
+<script src="../js/telacompras.js"></script>
 </body>
 </html>
