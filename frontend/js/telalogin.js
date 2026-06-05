@@ -62,7 +62,7 @@
   // Submit
   const form = document.getElementById('loginForm');
   if (form) {
-    form.addEventListener('submit', e => {
+    form.addEventListener('submit', async e => {
       let allValid = true;
       form.querySelectorAll('.campo-wrap input').forEach(input => {
         const campo = input.closest('[data-field]');
@@ -75,7 +75,37 @@
           allValid = false;
         }
       });
-      if (!allValid) e.preventDefault();
+      //adicionar aqui 
+      if (!allValid) {
+    e.preventDefault();
+    return;
+}
+
+e.preventDefault();
+
+const dados = {
+    email: form.querySelector('[data-field="email"] input').value,
+    senha: form.querySelector('[data-field="senha"] input').value,
+};
+
+try {
+    const resposta = await fetch('http://localhost:3000/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(dados)
+    });
+
+    const resultado = await resposta.json();
+
+    if (resposta.ok) {
+        alert('Login realizado com sucesso!');
+        window.location.href = 'telausuario.html';
+    } else {
+        alert(resultado.erro);
+    }
+} catch (erro) {
+    alert('Erro ao conectar com o servidor');
+}
     });
   }
 
