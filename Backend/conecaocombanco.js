@@ -1,4 +1,4 @@
-import mysql from 'mysql2/promise';
+const mysql = require('mysql2/promise');
 
 async function conectar() {
     return await mysql.createConnection({
@@ -6,7 +6,7 @@ async function conectar() {
         port: 3306,
         user: 'root',
         password: '',
-        database: 'noticiario'
+        database: 'cadastro'
     });
 }
 
@@ -24,4 +24,4 @@ async function executarQuery(query, params = []) {
     }
 }
 
-export default executarQuery;
+module.exports = executarQuery;
