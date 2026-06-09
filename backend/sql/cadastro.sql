@@ -7,24 +7,10 @@ CREATE TABLE usuario (
     nome        VARCHAR(250)  NOT NULL,
     email       VARCHAR(100)  NOT NULL UNIQUE,
     cpf_cnpj    VARCHAR(14)   NOT NULL UNIQUE,
-    telefone    CHAR(12)      UNIQUE,
+    telefone    CHAR(15)      UNIQUE,
     endereco    VARCHAR(250),
     imagem      VARCHAR(250),
     senha       VARCHAR(255)  NOT NULL,
     ativo       TINYINT(1)    NOT NULL DEFAULT 1,
     criado_em   DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
-
-
-CREATE OR REPLACE VIEW usuario_publico AS
-    SELECT
-        id,
-        nome,
-        email,
-        cpf_cnpj,
-        telefone,
-        endereco,
-        imagem,
-        ativo,
-        criado_em
-    FROM usuario;
