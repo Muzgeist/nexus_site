@@ -151,7 +151,6 @@
     }
   }
 
-  // Blur = toca o campo e valida
   document.querySelectorAll('.campo-wrap input').forEach(input => {
     input.addEventListener('input',  () => validateField(input));
     input.addEventListener('blur',   () => {
@@ -172,6 +171,8 @@
   const form = document.getElementById('cadastroForm');
   if (form) {
     form.addEventListener('submit', async e => {
+      e.preventDefault();
+
       let allValid = true;
       form.querySelectorAll('.campo-wrap input').forEach(input => {
         const campo = input.closest('[data-field]');
@@ -184,40 +185,36 @@
           allValid = false;
         }
       });
-      if (!allValid) {
-    e.preventDefault();
-    return;
-}
 
-e.preventDefault();
+      if (!allValid) return;
 
-const dados = {
-    nome:     form.querySelector('[data-field="nome"] input').value,
-    email:    form.querySelector('[data-field="email"] input').value,
-    cpf_cnpj: form.querySelector('[data-field="cpf"] input').value,
-    telefone: form.querySelector('[data-field="telefone"] input').value,
-    endereco: form.querySelector('[data-field="endereco"] input').value,
-    senha:    form.querySelector('[data-field="senha"] input').value,
-};
+      const dados = {
+        nome:     form.querySelector('[data-field="nome"] input').value,
+        email:    form.querySelector('[data-field="email"] input').value,
+        cpf_cnpj: form.querySelector('[data-field="cpf"] input').value,
+        telefone: form.querySelector('[data-field="telefone"] input').value,
+        endereco: form.querySelector('[data-field="endereco"] input').value,
+        senha:    form.querySelector('[data-field="senha"] input').value,
+      };
 
-try {
-    const resposta = await fetch('http://localhost:3000/usuarios', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(dados)
-    });
+      try {
+        const resposta = await fetch('http://localhost:3000/cadastro', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(dados)
+        });
 
-    const resultado = await resposta.json();
+        const resultado = await resposta.json();
 
-    if (resposta.ok) {
-        alert('Cadastro realizado com sucesso!');
-        window.location.href = 'telalogin.html';
-    } else {
-        alert(resultado.erro);
-    }
-} catch (erro) {
-    alert('Erro ao conectar com o servidor');
-}
+        if (resposta.ok) {
+          alert('Cadastro realizado com sucesso!');
+          window.location.href = 'html/telalogin.html';
+        } else {
+          alert(resultado.erro || 'Erro ao realizar cadastro');
+        }
+      } catch (erro) {
+        alert('Erro ao conectar com o servidor. Verifique se ele está rodando.');
+      }
     });
   }
 

@@ -6,13 +6,11 @@
   'use strict';
 
   const validators = {
-    nome:  v => v.trim().length >= 2,
     email: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v),
     senha: v => v.length >= 8,
   };
 
   const msgs = {
-    nome:  'Informe seu nome',
     email: 'E-mail inválido',
     senha: 'Senha inválida',
   };
@@ -63,6 +61,8 @@
   const form = document.getElementById('loginForm');
   if (form) {
     form.addEventListener('submit', async e => {
+      e.preventDefault();
+
       let allValid = true;
       form.querySelectorAll('.campo-wrap input').forEach(input => {
         const campo = input.closest('[data-field]');
@@ -75,37 +75,34 @@
           allValid = false;
         }
       });
-      //adicionar aqui 
-      if (!allValid) {
-    e.preventDefault();
-    return;
-}
 
-e.preventDefault();
+      if (!allValid) return;
 
-const dados = {
-    email: form.querySelector('[data-field="email"] input').value,
-    senha: form.querySelector('[data-field="senha"] input').value,
-};
+      const dados = {
+        email: form.querySelector('[data-field="email"] input').value,
+        senha: form.querySelector('[data-field="senha"] input').value,
+      };
 
-try {
-    const resposta = await fetch('http://localhost:3000/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(dados)
-    });
+      try {
+        const resposta = await fetch('http://localhost:3000/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(dados)
+        });
 
-    const resultado = await resposta.json();
+        const resultado = await resposta.json();
 
-    if (resposta.ok) {
-        alert('Login realizado com sucesso!');
-        window.location.href = 'telausuario.html';
-    } else {
-        alert(resultado.erro);
-    }
-} catch (erro) {
-    alert('Erro ao conectar com o servidor');
-}
+        if (resposta.ok) {
+          // Salva os dados do usuário na sessão do navegador
+          sessionStorage.setItem('usuario', JSON.stringify(resultado.usuario));
+          alert('Login realizado com sucesso!');
+          window.location.href = 'html/telausuario.html';
+        } else {
+          alert(resultado.erro || 'Email ou senha incorretos');
+        }
+      } catch (erro) {
+        alert('Erro ao conectar com o servidor. Verifique se ele está rodando.');
+      }
     });
   }
 
