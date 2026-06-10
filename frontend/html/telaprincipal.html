@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nexus Imports — Home</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Exo+2:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/nexus-shared.css">
+  <link rel="stylesheet" href="../css/telaprincipal.css">
+</head>
+<body>
+
+<div class="nexus-bg" aria-hidden="true"></div>
+
+<!-- Partículas decorativas -->
+<canvas id="particleCanvas" aria-hidden="true"></canvas>
+
+<div class="page-wrapper">
+
+  <!-- ── HEADER ─────────────────────────────────── -->
+  <header class="nexus-header principal-header">
+    <div class="logo-icon">
+      <img src="../img/nexus-logo.png" alt="Nexus Logo">
+    </div>
+    <span class="logo-text">NEXUS IMPORTS</span>
+
+    <nav class="header-nav" aria-label="Navegação principal">
+      <a href="telacarrinho.html" class="nav-link">Carrinho</a>
+      <a href="telacompras.html" class="nav-link">Compras</a>
+    </nav>
+
+    <!-- Botão de perfil com foto do usuário -->
+    <button
+      class="btn-avatar-header"
+      id="btnAvatarHeader"
+      aria-label="Meu perfil"
+      title="Meu perfil"
+    >
+      <img id="avatarHeaderImg" src="" alt="" class="avatar-header-img" style="display:none;">
+      <div class="avatar-header-fallback" id="avatarHeaderFallback">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <circle cx="12" cy="8" r="4"/>
+          <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+        </svg>
+      </div>
+      <span class="avatar-header-ring" aria-hidden="true"></span>
+    </button>
+  </header>
+
+  <!-- ── HERO SECTION ───────────────────────────── -->
+  <section class="hero-section" id="heroSection" aria-label="Bem-vindo à Nexus Imports">
+    <div class="hero-content">
+
+      <div class="hero-eyebrow reveal">
+        <span class="eyebrow-dot"></span>
+        <span>Importação de Alta Performance</span>
+      </div>
+
+      <h1 class="hero-title reveal reveal-delay-1">
+        <span class="title-line title-line--main">BEM-VINDO,</span>
+        <span class="title-line title-line--name" id="heroUserName">USUÁRIO</span>
+      </h1>
+
+      <p class="hero-sub reveal reveal-delay-2">
+        Peças importadas diretamente da Ásia e América do Norte para você economizar.
+        Hardware de alto desempenho, conectado ao mundo.
+      </p>
+
+      <div class="hero-cta reveal reveal-delay-3">
+        <a href="#nav-cards" class="btn-nexus btn-hero">
+          <span>Explorar agora</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M12 5v14M5 12l7 7 7-7"/>
+          </svg>
+        </a>
+      </div>
+
+      <!-- Stats rápidos -->
+      <div class="hero-stats reveal reveal-delay-4">
+        <div class="stat-item">
+          <span class="stat-value">3</span>
+          <span class="stat-label">Continentes</span>
+        </div>
+        <div class="stat-divider" aria-hidden="true"></div>
+        <div class="stat-item">
+          <span class="stat-value">100+</span>
+          <span class="stat-label">Produtos</span>
+        </div>
+        <div class="stat-divider" aria-hidden="true"></div>
+        <div class="stat-item">
+          <span class="stat-value">B2B</span>
+          <span class="stat-label">Distribuição</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Orb decorativo -->
+    <div class="hero-orb" aria-hidden="true"></div>
+    <div class="hero-orb hero-orb--secondary" aria-hidden="true"></div>
+
+    <!-- Indicador de scroll -->
+    <div class="scroll-indicator" aria-hidden="true">
+      <div class="scroll-dot"></div>
+    </div>
+  </section>
+
+  <!-- ── CARDS DE NAVEGAÇÃO ─────────────────────── -->
+  <section class="nav-cards-section" id="nav-cards" aria-label="Acessar seções">
+    <div class="section-label reveal">
+      <span>Acesso rápido</span>
+    </div>
+
+    <div class="nav-cards-grid">
+
+      <!-- Card: Produtos -->
+      <a href="#" class="nav-card reveal reveal-delay-1" id="cardProdutos" data-href="telacarrinho.html" aria-label="Ir para Produtos">
+        <div class="card-glow" aria-hidden="true"></div>
+        <div class="card-inner">
+          <div class="card-icon-wrap">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="2" y="3" width="20" height="14" rx="2"/>
+              <path d="M8 21h8M12 17v4"/>
+              <path d="M7 8h10M7 11h6"/>
+            </svg>
+          </div>
+          <div class="card-body">
+            <h2 class="card-title">Produtos</h2>
+            <p class="card-desc">Hardware, periféricos e componentes importados diretamente dos melhores fornecedores globais.</p>
+          </div>
+          <div class="card-arrow" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </div>
+        </div>
+        <div class="card-tag">Navegar</div>
+      </a>
+
+      <!-- Card: Meu Carrinho -->
+      <a href="telacarrinho.html" class="nav-card reveal reveal-delay-2" aria-label="Ir para Meu Carrinho">
+        <div class="card-glow card-glow--cart" aria-hidden="true"></div>
+        <div class="card-inner">
+          <div class="card-icon-wrap card-icon-wrap--cart">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+              <path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/>
+            </svg>
+          </div>
+          <div class="card-body">
+            <h2 class="card-title">Meu Carrinho</h2>
+            <p class="card-desc">Gerencie os produtos selecionados, ajuste quantidades e finalize sua compra com facilidade.</p>
+          </div>
+          <div class="card-arrow" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </div>
+        </div>
+        <div class="card-tag card-tag--cart">Acessar</div>
+      </a>
+
+      <!-- Card: Minhas Compras -->
+      <a href="telacompras.html" class="nav-card reveal reveal-delay-3" aria-label="Ir para Minhas Compras">
+        <div class="card-glow card-glow--orders" aria-hidden="true"></div>
+        <div class="card-inner">
+          <div class="card-icon-wrap card-icon-wrap--orders">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+              <line x1="3" y1="6" x2="21" y2="6"/>
+              <path d="M16 10a4 4 0 0 1-8 0"/>
+            </svg>
+          </div>
+          <div class="card-body">
+            <h2 class="card-title">Minhas Compras</h2>
+            <p class="card-desc">Acompanhe seus pedidos, histórico de compras e status de entrega em tempo real.</p>
+          </div>
+          <div class="card-arrow" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </div>
+        </div>
+        <div class="card-tag card-tag--orders">Ver pedidos</div>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- ── SOBRE / MISSÃO ─────────────────────────── -->
+  <section class="about-section" aria-label="Sobre a Nexus Imports">
+    <div class="about-grid">
+
+      <div class="about-text-col">
+        <div class="section-label reveal">
+          <span>Sobre nós</span>
+        </div>
+        <h2 class="about-title reveal reveal-delay-1">
+          Conectando <span class="text-pink">tecnologia</span><br>
+          ao mercado global
+        </h2>
+        <p class="about-body reveal reveal-delay-2">
+          A Nexus é especializada em importação, exportação e distribuição de componentes de T.I,
+          usando o Brasil como principal centro logístico. Importamos da Ásia e América do Norte
+          para abastecer o mercado brasileiro e a América Latina.
+        </p>
+
+        <div class="mvv-grid reveal reveal-delay-3">
+          <div class="mvv-item">
+            <div class="mvv-icon mvv-icon--mission">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                <polyline points="22 4 12 14.01 9 11.01"/>
+              </svg>
+            </div>
+            <div>
+              <span class="mvv-label">Missão</span>
+              <p class="mvv-text">Fornecer soluções tecnológicas com agilidade, confiança e excelência.</p>
+            </div>
+          </div>
+          <div class="mvv-item">
+            <div class="mvv-icon mvv-icon--vision">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+            </div>
+            <div>
+              <span class="mvv-label">Visão</span>
+              <p class="mvv-text">Ser referência em inovação, logística e parceria internacional de T.I.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="about-orbs-col reveal reveal-delay-2" aria-hidden="true">
+        <div class="globe-visual">
+          <div class="globe-ring globe-ring--1"></div>
+          <div class="globe-ring globe-ring--2"></div>
+          <div class="globe-ring globe-ring--3"></div>
+          <div class="globe-core">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+            </svg>
+          </div>
+          <div class="supplier-chip supplier-chip--1">Asia</div>
+          <div class="supplier-chip supplier-chip--2">América</div>
+          <div class="supplier-chip supplier-chip--3">Europa</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── FORNECEDORES ───────────────────────────── -->
+  <section class="suppliers-section" aria-label="Nossos fornecedores">
+    <div class="section-label reveal">
+      <span>Fornecedores parceiros</span>
+    </div>
+    <h2 class="suppliers-title reveal reveal-delay-1">
+      Marcas que você <span class="text-pink">conhece e confia</span>
+    </h2>
+
+    <div class="suppliers-track-wrap reveal reveal-delay-2" aria-hidden="true">
+      <div class="suppliers-track">
+        <!-- duplicados para loop contínuo -->
+        <span class="supplier-name">Apple</span>
+        <span class="supplier-name">Microsoft</span>
+        <span class="supplier-name">Huawei</span>
+        <span class="supplier-name">Xiaomi</span>
+        <span class="supplier-name">Alibaba</span>
+        <span class="supplier-name">Amazon</span>
+        <span class="supplier-name">Google</span>
+        <span class="supplier-name">ASML</span>
+        <span class="supplier-name">Nokia</span>
+        <span class="supplier-name">SAP</span>
+        <!-- repetição para loop -->
+        <span class="supplier-name">Apple</span>
+        <span class="supplier-name">Microsoft</span>
+        <span class="supplier-name">Huawei</span>
+        <span class="supplier-name">Xiaomi</span>
+        <span class="supplier-name">Alibaba</span>
+        <span class="supplier-name">Amazon</span>
+        <span class="supplier-name">Google</span>
+        <span class="supplier-name">ASML</span>
+        <span class="supplier-name">Nokia</span>
+        <span class="supplier-name">SAP</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ─────────────────────────────────── -->
+  <footer class="principal-footer reveal">
+    <div class="footer-brand">
+      <div class="logo-icon logo-icon--sm">
+        <img src="../img/nexus-logo.png" alt="Nexus Logo">
+      </div>
+      <span class="logo-text">NEXUS IMPORTS</span>
+    </div>
+    <div class="footer-contact">
+      <span>nexusImports@gmail.com</span>
+      <span class="footer-sep" aria-hidden="true">·</span>
+      <span>+55 (31) 98457-6231</span>
+    </div>
+    <p class="footer-copy">&copy; 2025 Nexus Imports. Todos os direitos reservados.</p>
+  </footer>
+
+</div><!-- /page-wrapper -->
+
+<script src="../js/nexus-shared.js"></script>
+<script src="../js/telaprincipal.js"></script>
+</body>
+</html>

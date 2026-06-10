@@ -95,8 +95,7 @@
         if (resposta.ok) {
           // Salva os dados do usuário na sessão do navegador
           sessionStorage.setItem('usuario', JSON.stringify(resultado.usuario));
-          alert('Login realizado com sucesso!');
-          window.location.href = 'html/telausuario.html';
+          window.location.href = 'html/telaprincipal.html';
         } else {
           alert(resultado.erro || 'Email ou senha incorretos');
         }
