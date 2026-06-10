@@ -24,6 +24,8 @@
         fotoPerfil.src = e.target.result;
         fotoPerfil.style.display = 'block';
         if (avatarFB) avatarFB.style.display = 'none';
+        // Persiste a foto para ser lida por telaprincipal e demais telas
+        try { sessionStorage.setItem('fotoPerfil', e.target.result); } catch (_) {}
 
         // Feedback de atualização
         const overlay = avatarWrap.querySelector('.avatar-camera-overlay');
