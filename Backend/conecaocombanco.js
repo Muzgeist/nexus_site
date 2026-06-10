@@ -6,7 +6,7 @@ async function conectar() {
         port: 3306,
         user: 'root',
         password: '',       // coloque sua senha aqui se tiver
-        database: 'cadastro'
+        database: 'Banco'
     });
 }
 
