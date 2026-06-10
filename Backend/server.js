@@ -29,12 +29,10 @@ app.post('/cadastro', async (req, res) => {
     try {
         const { nome, email, cpf_cnpj, telefone, endereco, senha } = req.body;
 
-        // Valida campos obrigatórios
         if (!nome || !email || !cpf_cnpj || !senha) {
             return res.status(400).json({ erro: 'Nome, email, CPF/CNPJ e senha são obrigatórios' });
         }
 
-        // Verifica se email já existe
         const emailExiste = await executarQuery(
             'SELECT id FROM usuario WHERE email = ?',
             [email]
@@ -43,7 +41,6 @@ app.post('/cadastro', async (req, res) => {
             return res.status(409).json({ erro: 'Este e-mail já está cadastrado' });
         }
 
-        // Verifica se CPF/CNPJ já existe
         const cpfExiste = await executarQuery(
             'SELECT id FROM usuario WHERE cpf_cnpj = ?',
             [cpf_cnpj]
@@ -52,7 +49,6 @@ app.post('/cadastro', async (req, res) => {
             return res.status(409).json({ erro: 'Este CPF/CNPJ já está cadastrado' });
         }
 
-        // Insere o novo usuário
         const resultado = await executarQuery(
             'INSERT INTO usuario (nome, email, cpf_cnpj, telefone, endereco, senha) VALUES (?, ?, ?, ?, ?, ?)',
             [nome, email, cpf_cnpj, telefone || null, endereco || null, senha]
@@ -60,11 +56,7 @@ app.post('/cadastro', async (req, res) => {
 
         res.status(201).json({
             mensagem: 'Cadastro realizado com sucesso!',
-            usuario: {
-                id: resultado.insertId,
-                nome,
-                email
-            }
+            usuario: { id: resultado.insertId, nome, email }
         });
 
     } catch (erro) {
@@ -82,7 +74,6 @@ app.post('/login', async (req, res) => {
             return res.status(400).json({ erro: 'Email e senha são obrigatórios' });
         }
 
-        // Busca o usuário pelo email
         const resultado = await executarQuery(
             'SELECT * FROM usuario WHERE email = ?',
             [email]
@@ -94,23 +85,219 @@ app.post('/login', async (req, res) => {
 
         const usuario = resultado[0];
 
-        // Compara a senha
         if (senha !== usuario.senha) {
             return res.status(401).json({ erro: 'Email ou senha incorretos' });
         }
 
-        // Login ok
         res.json({
             mensagem: 'Login realizado com sucesso!',
             usuario: {
                 id: usuario.id,
                 nome: usuario.nome,
-                email: usuario.email
+                email: usuario.email,
+                telefone: usuario.telefone,
+                endereco: usuario.endereco,
+                cpf_cnpj: usuario.cpf_cnpj
             }
         });
 
     } catch (erro) {
         console.error('Erro no login:', erro);
+        res.status(500).json({ erro: 'Erro interno no servidor' });
+    }
+});
+
+// ── Atualizar perfil do usuário ─────────────────────
+app.put('/usuario/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { nome, telefone, endereco } = req.body;
+
+        if (!nome) {
+            return res.status(400).json({ erro: 'Nome é obrigatório' });
+        }
+
+        await executarQuery(
+            'UPDATE usuario SET nome = ?, telefone = ?, endereco = ? WHERE id = ?',
+            [nome, telefone || null, endereco || null, id]
+        );
+
+        res.json({ mensagem: 'Perfil atualizado com sucesso!' });
+
+    } catch (erro) {
+        console.error('Erro ao atualizar perfil:', erro);
+        res.status(500).json({ erro: 'Erro interno no servidor' });
+    }
+});
+
+// ── Produtos (carrinho) ─────────────────────────────
+app.get('/produtos', async (req, res) => {
+    try {
+        const { categoria, busca } = req.query;
+
+        let query = 'SELECT * FROM vw_estoque_resumo WHERE 1=1';
+        const params = [];
+
+        if (categoria) {
+            query += ' AND categoria = ?';
+            params.push(categoria);
+        }
+
+        if (busca) {
+            query += ' AND (produto LIKE ? OR descricao LIKE ? OR marca LIKE ?)';
+            const termo = `%${busca}%`;
+            params.push(termo, termo, termo);
+        }
+
+        query += ' ORDER BY categoria, produto';
+
+        const resultado = await executarQuery(query, params);
+        res.json(resultado);
+
+    } catch (erro) {
+        console.error('Erro ao buscar produtos:', erro);
+        res.status(500).json({ erro: 'Erro interno no servidor' });
+    }
+});
+
+// ── Finalizar compra ────────────────────────────────
+app.post('/compra', async (req, res) => {
+    try {
+        const { usuario_id, itens } = req.body;
+
+        // itens = [{ produto_id, quantidade }, ...]
+        if (!usuario_id || !itens || itens.length === 0) {
+            return res.status(400).json({ erro: 'Dados de compra inválidos' });
+        }
+
+        // Busca dados do usuário
+        const usuarios = await executarQuery(
+            'SELECT * FROM usuario WHERE id = ?',
+            [usuario_id]
+        );
+        if (usuarios.length === 0) {
+            return res.status(404).json({ erro: 'Usuário não encontrado' });
+        }
+        const usuario = usuarios[0];
+
+        if (!usuario.endereco) {
+            return res.status(400).json({ erro: 'Cadastre um endereço antes de comprar' });
+        }
+
+        const comprasIds = [];
+
+        for (const item of itens) {
+            const { produto_id, quantidade } = item;
+
+            // Busca produto e valida estoque
+            const produtos = await executarQuery(
+                'SELECT * FROM produtos WHERE id = ? AND ativo = 1',
+                [produto_id]
+            );
+            if (produtos.length === 0) {
+                return res.status(404).json({ erro: `Produto ID ${produto_id} não encontrado` });
+            }
+            const produto = produtos[0];
+
+            if (produto.quantidade < quantidade) {
+                return res.status(400).json({
+                    erro: `Estoque insuficiente para "${produto.produto}". Disponível: ${produto.quantidade}`
+                });
+            }
+
+            // Insere a compra
+            const resultado = await executarQuery(
+                `INSERT INTO compra
+                    (usuario_id, nome, email, cpf_cnpj, telefone, endereco_entrega,
+                     produto_id, produto, quantidade, valor_unitario)
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+                [
+                    usuario.id,
+                    usuario.nome,
+                    usuario.email,
+                    usuario.cpf_cnpj,
+                    usuario.telefone || null,
+                    usuario.endereco,
+                    produto.id,
+                    produto.produto,
+                    quantidade,
+                    produto.valor_unitario
+                ]
+            );
+
+            comprasIds.push(resultado.insertId);
+        }
+
+        res.status(201).json({
+            mensagem: 'Compra realizada com sucesso!',
+            compras_ids: comprasIds
+        });
+
+    } catch (erro) {
+        console.error('Erro ao finalizar compra:', erro);
+        res.status(500).json({ erro: 'Erro interno no servidor' });
+    }
+});
+
+// ── Histórico de compras do usuário ─────────────────
+app.get('/compras/:usuario_id', async (req, res) => {
+    try {
+        const { usuario_id } = req.params;
+
+        const resultado = await executarQuery(
+            `SELECT * FROM compra
+             WHERE usuario_id = ?
+             ORDER BY criado_em DESC`,
+            [usuario_id]
+        );
+
+        res.json(resultado);
+
+    } catch (erro) {
+        console.error('Erro ao buscar compras:', erro);
+        res.status(500).json({ erro: 'Erro interno no servidor' });
+    }
+});
+
+// ── Cancelar compra ─────────────────────────────────
+app.put('/compra/:id/cancelar', async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const compras = await executarQuery(
+            'SELECT * FROM compra WHERE id = ?',
+            [id]
+        );
+
+        if (compras.length === 0) {
+            return res.status(404).json({ erro: 'Compra não encontrada' });
+        }
+
+        const compra = compras[0];
+
+        if (['ENVIADO', 'ENTREGUE'].includes(compra.status_entrega)) {
+            return res.status(400).json({ erro: 'Não é possível cancelar uma compra já enviada ou entregue' });
+        }
+
+        await executarQuery(
+            `UPDATE compra
+             SET status_pagamento = 'CANCELADO', status_entrega = 'CANCELADO'
+             WHERE id = ?`,
+            [id]
+        );
+
+        // Devolve ao estoque se já tinha sido pago
+        if (compra.status_pagamento === 'PAGO') {
+            await executarQuery(
+                'UPDATE produtos SET quantidade = quantidade + ? WHERE id = ?',
+                [compra.quantidade, compra.produto_id]
+            );
+        }
+
+        res.json({ mensagem: 'Compra cancelada com sucesso!' });
+
+    } catch (erro) {
+        console.error('Erro ao cancelar compra:', erro);
         res.status(500).json({ erro: 'Erro interno no servidor' });
     }
 });
