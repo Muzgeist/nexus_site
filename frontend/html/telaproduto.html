@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nexus Imports — Produto</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Exo+2:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/nexus-shared.css">
+  <link rel="stylesheet" href="../css/telaproduto.css">
+</head>
+<body>
+
+<div class="nexus-bg nexus-bg--light" aria-hidden="true"></div>
+
+<!-- Toast de feedback -->
+<div class="toast" id="toast" aria-live="polite"></div>
+
+<!-- Modal de confirmação de compra -->
+<div class="modal-overlay" id="modalOverlay" aria-hidden="true">
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-icon">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+        <line x1="3" y1="6" x2="21" y2="6"/>
+        <path d="M16 10a4 4 0 0 1-8 0"/>
+      </svg>
+    </div>
+    <h2 class="modal-title" id="modalTitle">Confirmar compra</h2>
+    <p class="modal-body" id="modalBody"></p>
+    <div class="modal-actions">
+      <button class="btn-nexus btn-modal-cancel" id="modalCancel">Cancelar</button>
+      <button class="btn-nexus btn-modal-confirm" id="modalConfirm">
+        <span>Confirmar compra</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+          <polyline points="22 4 12 14.01 9 11.01"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="page-wrapper">
+
+  <!-- ── HEADER ─────────────────────────────────── -->
+  <header class="nexus-header">
+    <a href="telaprincipal.html" class="logo-home-link" aria-label="Voltar à página principal">
+      <div class="logo-icon"><img src="../img/nexus-logo.png" alt="Nexus Logo"></div>
+      <span class="logo-text">NEXUS IMPORTS</span>
+    </a>
+
+    <nav class="header-nav" aria-label="Navegação principal">
+      <a href="telaprodutos.html" class="nav-link">Produtos</a>
+      <a href="telacarrinho.html" class="nav-link">Carrinho</a>
+      <a href="telacompras.html" class="nav-link">Compras</a>
+    </nav>
+
+    <button class="btn-avatar-header" id="btnAvatarHeader" aria-label="Meu perfil" title="Meu perfil">
+      <img id="avatarHeaderImg" src="" alt="" class="avatar-header-img" style="display:none;">
+      <div class="avatar-header-fallback" id="avatarHeaderFallback">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <circle cx="12" cy="8" r="4"/>
+          <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+        </svg>
+      </div>
+      <span class="avatar-header-ring" aria-hidden="true"></span>
+    </button>
+  </header>
+
+  <!-- ── BREADCRUMB ─────────────────────────────── -->
+  <nav class="breadcrumb reveal" aria-label="Caminho">
+    <a href="telaprodutos.html" class="breadcrumb-link">Produtos</a>
+    <span class="breadcrumb-sep" aria-hidden="true">›</span>
+    <span class="breadcrumb-cat" id="breadcrumbCat">—</span>
+    <span class="breadcrumb-sep" aria-hidden="true">›</span>
+    <span class="breadcrumb-nome" id="breadcrumbNome">—</span>
+  </nav>
+
+  <!-- ── LOADER INICIAL ────────────────────────── -->
+  <div class="produto-loader" id="produtoLoader" aria-label="Carregando produto">
+    <div class="loader-ring"></div>
+    <span>Carregando produto…</span>
+  </div>
+
+  <!-- ── CONTEÚDO PRINCIPAL ─────────────────────── -->
+  <main class="produto-main" id="produtoMain" style="display:none;" aria-label="Detalhes do produto">
+
+    <div class="produto-layout">
+
+      <!-- ── Coluna imagem ─────────────────────── -->
+      <div class="produto-img-col reveal">
+        <div class="produto-img-frame">
+          <img id="produtoImg" src="" alt="" class="produto-img">
+          <div class="produto-img-placeholder" id="produtoImgPlaceholder" style="display:none;">
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+              <rect x="2" y="3" width="20" height="14" rx="2"/>
+              <path d="M8 21h8M12 17v4"/>
+            </svg>
+          </div>
+        </div>
+        <!-- Badge de categoria -->
+        <div class="produto-badge" id="produtoBadge"></div>
+      </div>
+
+      <!-- ── Coluna detalhes ───────────────────── -->
+      <div class="produto-info-col reveal reveal-delay-1">
+
+        <div class="produto-meta">
+          <span class="produto-marca" id="produtoMarca"></span>
+          <span class="produto-id-badge" id="produtoIdBadge"></span>
+        </div>
+
+        <h1 class="produto-nome" id="produtoNome">—</h1>
+
+        <p class="produto-descricao" id="produtoDescricao">—</p>
+
+        <!-- Preço -->
+        <div class="produto-preco-wrap">
+          <span class="produto-preco" id="produtoPreco">—</span>
+          <span class="produto-preco-label">por unidade</span>
+        </div>
+
+        <!-- Estoque -->
+        <div class="produto-estoque-info" id="produtoEstoqueInfo">
+          <div class="estoque-dot" id="estoqueDot"></div>
+          <span id="estoqueLabel">—</span>
+        </div>
+
+        <!-- Separador -->
+        <div class="produto-divider" aria-hidden="true"></div>
+
+        <!-- Seletor de quantidade -->
+        <div class="qty-section" id="qtySection">
+          <label class="qty-label" for="qtyInput">Quantidade</label>
+          <div class="qty-ctrl">
+            <button class="qty-btn" id="qtyMinus" aria-label="Diminuir quantidade">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
+            </button>
+            <input
+              type="number"
+              id="qtyInput"
+              class="qty-input"
+              value="1"
+              min="1"
+              max="1"
+              aria-label="Quantidade"
+            >
+            <button class="qty-btn" id="qtyPlus" aria-label="Aumentar quantidade">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="12" y1="5" x2="12" y2="19"/>
+                <line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
+            </button>
+          </div>
+          <span class="qty-total" id="qtyTotal"></span>
+        </div>
+
+        <!-- Ações -->
+        <div class="produto-acoes" id="produtoAcoes">
+          <button class="btn-nexus btn-comprar" id="btnComprar">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+              <line x1="3" y1="6" x2="21" y2="6"/>
+              <path d="M16 10a4 4 0 0 1-8 0"/>
+            </svg>
+            <span>Comprar agora</span>
+          </button>
+          <button class="btn-nexus btn-carrinho" id="btnCarrinho">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+              <path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/>
+            </svg>
+            <span>Adicionar ao carrinho</span>
+          </button>
+        </div>
+
+        <!-- Aviso sem estoque -->
+        <div class="sem-estoque-aviso" id="semEstoqueAviso" style="display:none;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          <span>Produto sem estoque disponível</span>
+        </div>
+
+        <!-- Informações adicionais -->
+        <div class="produto-extras reveal reveal-delay-2">
+          <div class="extra-item">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+              <polyline points="22 4 12 14.01 9 11.01"/>
+            </svg>
+            <span>Produto original importado</span>
+          </div>
+          <div class="extra-item">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+              <circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>
+            </svg>
+            <span>Envio para todo o Brasil</span>
+          </div>
+          <div class="extra-item">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+            <span>Compra segura e garantida</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- ── ERRO / NOT FOUND ───────────────────────── -->
+  <div class="produto-erro" id="produtoErro" style="display:none;">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+      <circle cx="12" cy="12" r="10"/>
+      <line x1="12" y1="8" x2="12" y2="12"/>
+      <line x1="12" y1="16" x2="12.01" y2="16"/>
+    </svg>
+    <h2>Produto não encontrado</h2>
+    <p>O produto solicitado não existe ou foi removido.</p>
+    <a href="telaprodutos.html" class="btn-nexus btn-voltar-lista">
+      <span>Ver todos os produtos</span>
+    </a>
+  </div>
+
+  <!-- ── FOOTER ─────────────────────────────────── -->
+  <footer class="principal-footer reveal">
+    <div class="footer-brand">
+      <div class="logo-icon logo-icon--sm">
+        <img src="../img/nexus-logo.png" alt="Nexus Logo">
+      </div>
+      <span class="logo-text">NEXUS IMPORTS</span>
+    </div>
+    <div class="footer-contact">
+      <span>nexusImports@gmail.com</span>
+      <span class="footer-sep" aria-hidden="true">·</span>
+      <span>+55 (31) 98457-6231</span>
+    </div>
+    <p class="footer-copy">&copy; 2025 Nexus Imports. Todos os direitos reservados.</p>
+  </footer>
+
+</div><!-- /page-wrapper -->
+
+<script src="../js/nexus-shared.js"></script>
+<script src="../js/telaproduto.js"></script>
+</body>
+</html>

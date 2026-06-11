@@ -250,3 +250,19 @@ body {
 
 /* ── Shared Scroll Reveal Script Trigger ─────── */
 /* (each page includes the IntersectionObserver) */
+
+/* ── Logo como botão home ───────────────────── */
+.logo-home-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  flex-shrink: 0;
+  border-radius: var(--radius-sm);
+  padding: 4px 6px;
+  margin: -4px -6px;
+  transition: opacity var(--transition-fast);
+}
+.logo-home-link:hover { opacity: 0.82; }
+.logo-home-link .logo-icon,
+.logo-home-link .logo-text { flex-shrink: 0; }
