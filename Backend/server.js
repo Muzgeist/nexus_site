@@ -312,6 +312,38 @@ app.get('/usuarios', async (req, res) => {
     }
 });
 
+
+// ── Categorias de produtos ──────────────────────────
+app.get('/categorias', async (req, res) => {
+    try {
+        const resultado = await executarQuery(
+            'SELECT DISTINCT categoria FROM produtos WHERE ativo = 1 AND categoria IS NOT NULL ORDER BY categoria'
+        );
+        res.json(resultado.map(r => r.categoria));
+    } catch (erro) {
+        console.error('Erro ao buscar categorias:', erro);
+        res.status(500).json({ erro: 'Erro interno no servidor' });
+    }
+});
+
+// ── Produto individual ──────────────────────────────
+app.get('/produto/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const resultado = await executarQuery(
+            'SELECT * FROM vw_estoque_resumo WHERE id = ?',
+            [id]
+        );
+        if (resultado.length === 0) {
+            return res.status(404).json({ erro: 'Produto não encontrado' });
+        }
+        res.json(resultado[0]);
+    } catch (erro) {
+        console.error('Erro ao buscar produto:', erro);
+        res.status(500).json({ erro: 'Erro interno no servidor' });
+    }
+});
+
 // ── Inicia o servidor ───────────────────────────────
 app.listen(3000, () => {
     console.log('Servidor Nexus rodando em http://localhost:3000');
