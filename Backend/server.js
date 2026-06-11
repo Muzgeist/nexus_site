@@ -1,5 +1,7 @@
+require('dotenv').config()
 const express = require('express');
 const path = require('path');
+const bcrypt = require('bcrypt');
 const executarQuery = require('./conecaocombanco');
 
 const app = express();
@@ -49,9 +51,11 @@ app.post('/cadastro', async (req, res) => {
             return res.status(409).json({ erro: 'Este CPF/CNPJ já está cadastrado' });
         }
 
+        const senhaHash = await bcrypt.hash(senha, 10);
+
         const resultado = await executarQuery(
             'INSERT INTO usuario (nome, email, cpf_cnpj, telefone, endereco, senha) VALUES (?, ?, ?, ?, ?, ?)',
-            [nome, email, cpf_cnpj, telefone || null, endereco || null, senha]
+            [nome, email, cpf_cnpj, telefone || null, endereco || null, senhaHash]
         );
 
         res.status(201).json({
@@ -85,7 +89,9 @@ app.post('/login', async (req, res) => {
 
         const usuario = resultado[0];
 
-        if (senha !== usuario.senha) {
+        const senhaCorreta = await bcrypt.compare(senha, usuario.senha);
+
+        if (!senhaCorreta) {
             return res.status(401).json({ erro: 'Email ou senha incorretos' });
         }
 
@@ -302,8 +308,12 @@ app.put('/compra/:id/cancelar', async (req, res) => {
     }
 });
 
-// ── Lista usuários (só pra teste) ───────────────────
+// ── Lista usuários (protegida por chave interna) ────
 app.get('/usuarios', async (req, res) => {
+    const chave = req.headers['x-admin-key'];
+    if (chave !== process.env.ADMIN_KEY) {
+        return res.status(403).json({ erro: 'Acesso negado' });
+    }
     try {
         const resultado = await executarQuery('SELECT id, nome, email, criado_em FROM usuario');
         res.json(resultado);
