@@ -208,7 +208,7 @@
 
         if (resposta.ok) {
           alert('Cadastro realizado com sucesso!');
-          window.location.href = 'html/telalogin.html';
+          window.location.href = 'telalogin.html';
         } else {
           alert(resultado.erro || 'Erro ao realizar cadastro');
         }
