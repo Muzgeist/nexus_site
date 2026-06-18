@@ -28,8 +28,97 @@
     if (total) total.textContent = n;
   }
 
+  // ── Injeta a checkbox de seleção em um card ──
+  function injectCheckbox(card) {
+    if (card.querySelector('.produto-card-select')) return; // já existe
+
+    const wrap = document.createElement('div');
+    wrap.className = 'produto-card-select';
+    wrap.innerHTML = `
+      <label class="checkbox-wrap" aria-label="Selecionar este produto">
+        <input type="checkbox" class="produto-checkbox card-select-checkbox">
+        <span class="checkbox-box" aria-hidden="true"></span>
+      </label>`;
+
+    const imgWrap = card.querySelector('.produto-img-wrap');
+    if (imgWrap) {
+      imgWrap.appendChild(wrap);
+    } else {
+      card.insertBefore(wrap, card.firstChild);
+    }
+
+    const checkbox = wrap.querySelector('input');
+    checkbox.addEventListener('change', () => {
+      card.classList.toggle('is-selected', checkbox.checked);
+      updateSelectionUI();
+    });
+  }
+
+  // ── Atualiza estado visual da seleção (botão + select-all) ──
+  function updateSelectionUI() {
+    const allChecks = Array.from(document.querySelectorAll('.card-select-checkbox'));
+    const checked   = allChecks.filter(c => c.checked);
+
+    const btnSel   = document.getElementById('btnComprarSelecionados');
+    const countEl  = document.getElementById('countSelecionados');
+    const selectAll = document.getElementById('checkSelectAll');
+
+    if (countEl) countEl.textContent = `(${checked.length})`;
+    if (btnSel)  btnSel.disabled = checked.length === 0;
+
+    if (selectAll) {
+      if (allChecks.length === 0) {
+        selectAll.checked = false;
+        selectAll.indeterminate = false;
+      } else if (checked.length === 0) {
+        selectAll.checked = false;
+        selectAll.indeterminate = false;
+      } else if (checked.length === allChecks.length) {
+        selectAll.checked = true;
+        selectAll.indeterminate = false;
+      } else {
+        selectAll.checked = false;
+        selectAll.indeterminate = true;
+      }
+    }
+  }
+
+  // ── Selecionar / desmarcar todos ─────────────
+  const checkSelectAll = document.getElementById('checkSelectAll');
+  if (checkSelectAll) {
+    checkSelectAll.addEventListener('change', () => {
+      const allChecks = document.querySelectorAll('.card-select-checkbox');
+      allChecks.forEach(c => {
+        c.checked = checkSelectAll.checked;
+        const card = c.closest('.produto-card');
+        if (card) card.classList.toggle('is-selected', c.checked);
+      });
+      updateSelectionUI();
+    });
+  }
+
+  // ── Comprar apenas os selecionados ───────────
+  const btnSelecionados = document.getElementById('btnComprarSelecionados');
+  if (btnSelecionados) {
+    btnSelecionados.addEventListener('click', () => {
+      const cards = Array.from(document.querySelectorAll('.produto-card'))
+        .filter(card => card.querySelector('.card-select-checkbox')?.checked);
+
+      if (cards.length === 0) {
+        showToast('Selecione ao menos um produto');
+        return;
+      }
+
+      // Aqui o backend receberá apenas os itens selecionados com suas quantidades
+      // Exemplo de payload: cards.map(c => ({ produto_id: c.dataset.produtoId, quantidade: c.querySelector('.qty-input').value }))
+      showToast(`✓ ${cards.length} ${cards.length === 1 ? 'item selecionado enviado' : 'itens selecionados enviados'} para o pedido`);
+    });
+  }
+
   // ── Inicializa os controles de cada card ─────
   function initCard(card) {
+    injectCheckbox(card);
+
     const estoque   = parseInt(card.dataset.estoque) || 99;
     const input     = card.querySelector('.qty-input');
     const btnMinus  = card.querySelector('.qty-btn--minus');
@@ -78,7 +167,7 @@
     card.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
     card.style.opacity    = '0';
     card.style.transform  = 'scale(0.92) translateY(-6px)';
-    setTimeout(() => { card.remove(); updateCount(); }, 310);
+    setTimeout(() => { card.remove(); updateCount(); updateSelectionUI(); }, 310);
   }
 
   // ── Comprar produto individual ───────────────
@@ -136,6 +225,7 @@
           if (node.nodeType === 1 && node.classList.contains('produto-card')) {
             initCard(node);
             updateCount();
+            updateSelectionUI();
           }
         });
       });
@@ -144,5 +234,6 @@
   }
 
   updateCount();
+  updateSelectionUI();
 
 })();
