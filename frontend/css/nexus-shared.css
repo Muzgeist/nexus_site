@@ -266,3 +266,485 @@ body {
 .logo-home-link:hover { opacity: 0.82; }
 .logo-home-link .logo-icon,
 .logo-home-link .logo-text { flex-shrink: 0; }
+
+/* ════════════════════════════════════════════
+   TEMA CLARO — Identidade: branco + dourado
+   (roxo usado apenas como adorno/detalhe sutil)
+   ════════════════════════════════════════════ */
+body.theme-light {
+  /* Fundos — branco e creme dominam */
+  --bg-deep:       #fffdf7;
+  --bg-dark:       #fdf8ec;
+  --bg-mid:        #f8efd9;
+  --bg-card:       rgba(255, 255, 255, 0.94);
+  --bg-card-light: rgba(255, 252, 244, 0.96);
+
+  /* "Purple" mantido como acento decorativo secundário (nunca dominante).
+     Escala invertida em relação ao dark: tons 100-400 ficam mais escuros/saturados
+     para servir de texto/ícone legível sobre branco; tons 600-900 ficam mais
+     escuros ainda para funcionar como fundo de gradiente com texto branco. */
+  --purple-900:    #2d1a4d;
+  --purple-800:    #3d2466;
+  --purple-700:    #4f2f80;
+  --purple-600:    #5c3a8f;
+  --purple-500:    #6b4fa0;
+  --purple-400:    #7456a8;
+  --purple-300:    #8463af;
+  --purple-200:    #a78bda;
+  --purple-100:    #c3aee8;
+
+  /* Dourado — cor de identidade/ação principal do tema claro */
+  --pink-neon:     #b8860b;
+  --pink-bright:   #d4a017;
+  --pink-glow:     rgba(184, 134, 11, 0.32);
+  --pink-soft:     rgba(184, 134, 11, 0.10);
+
+  /* Roxo usado apenas em brilhos/detalhes muito sutis */
+  --violet-neon:   #8d6fc4;
+  --violet-glow:   rgba(141, 111, 196, 0.18);
+
+  /* Texto — alto contraste sobre branco, sem tons roxos pouco legíveis */
+  --text-primary:  #241a08;
+  --text-secondary:#5a4a30;
+  --text-muted:    #8a7958;
+
+  --border-subtle: rgba(184, 134, 11, 0.22);
+  --border-active: rgba(184, 134, 11, 0.65);
+
+  --success:       #2d6a3e;
+  --success-glow:  rgba(45, 106, 62, 0.3);
+  --error:         #b3261e;
+  --error-glow:    rgba(179, 38, 30, 0.28);
+
+  --shadow-card:   0 8px 28px rgba(120, 90, 20, 0.10), 0 0 0 1px var(--border-subtle);
+  --shadow-glow-pink: 0 0 20px var(--pink-glow), 0 0 50px rgba(184,134,11,0.10);
+  --shadow-glow-violet: 0 0 16px var(--violet-glow), 0 0 40px rgba(141,111,196,0.08);
+}
+
+body.theme-light {
+  background: var(--bg-deep);
+  color: var(--text-primary);
+}
+
+body.theme-light .nexus-header {
+  background: rgba(255, 253, 247, 0.92);
+  border-bottom-color: rgba(184, 134, 11, 0.22);
+}
+
+/* Fundo animado — predominância branco/creme com leve dourado,
+   roxo aparece apenas como sombra suave de profundidade */
+body.theme-light .nexus-bg {
+  background:
+    radial-gradient(ellipse 70% 50% at 15% 20%, rgba(212, 160, 23, 0.10) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 60% at 85% 15%, rgba(141, 111, 196, 0.06) 0%, transparent 50%),
+    linear-gradient(160deg, #fffdf7 0%, #fdf8ec 45%, #fbf3dc 100%);
+}
+
+body.theme-light .nexus-bg::before,
+body.theme-light .nexus-bg::after {
+  opacity: 0.18;
+}
+
+/* Botões primários: dourado como cor de ação, texto escuro para contraste alto */
+body.theme-light .btn-nexus {
+  background: linear-gradient(135deg, #d4a017 0%, #b8860b 100%);
+  border-color: rgba(184, 134, 11, 0.5);
+  color: #2a1d05;
+}
+
+body.theme-light .btn-nexus:hover {
+  box-shadow: 0 8px 28px var(--pink-glow), 0 0 36px rgba(184,134,11,0.18), inset 0 1px 0 rgba(255,255,255,0.4);
+  border-color: var(--pink-bright);
+}
+
+/* Brilho de hover com leve toque roxo no canto — apenas detalhe decorativo */
+body.theme-light .btn-nexus::before {
+  background: linear-gradient(135deg, #d4a017 0%, #8d6fc4 130%);
+}
+
+/* Cards e superfícies: branco limpo com borda dourada sutil */
+body.theme-light .reveal,
+body.theme-light [class*="-card"],
+body.theme-light [class*="card-"] {
+  --card-border-tint: rgba(184, 134, 11, 0.18);
+}
+
+/* Links de navegação e textos secundários — contraste garantido */
+body.theme-light a {
+  color: inherit;
+}
+
+body.theme-light .nav-link,
+body.theme-light .hb-nav-link {
+  color: var(--text-secondary);
+}
+
+body.theme-light .nav-link:hover,
+body.theme-light .hb-nav-link:hover {
+  color: var(--text-primary);
+}
+
+/* ════════════════════════════════════════════
+   BOTÃO DE TEMA (sol / lua) — dentro do header
+   ════════════════════════════════════════════ */
+.btn-theme-toggle {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-subtle);
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-primary);
+  transition: var(--transition-mid);
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.btn-theme-toggle:hover {
+  border-color: var(--border-active);
+  background: var(--pink-soft);
+  transform: scale(1.06);
+}
+
+.btn-theme-toggle .icon-dark,
+.btn-theme-toggle .icon-light { transition: opacity 0.25s, transform 0.3s; }
+
+.btn-theme-toggle .icon-light { display: none; }
+
+body.theme-light .btn-theme-toggle .icon-dark { display: none; }
+body.theme-light .btn-theme-toggle .icon-light { display: block; }
+
+body.theme-light .btn-theme-toggle {
+  border-color: rgba(184, 134, 11, 0.35);
+  color: #7c3aed;
+}
+
+/* Fallback: páginas sem .header-actions (compatibilidade) */
+.btn-theme-toggle--floating {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 9999;
+  border-radius: var(--radius-full);
+  background: var(--bg-card);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+}
+body.theme-light .btn-theme-toggle--floating {
+  background: rgba(255,255,255,0.9);
+}
+
+/* ════════════════════════════════════════════
+   HAMBURGUER MENU
+   ════════════════════════════════════════════ */
+.btn-hamburger {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-subtle);
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+  transition: var(--transition-mid);
+  flex-shrink: 0;
+}
+
+.btn-hamburger:hover {
+  border-color: var(--border-active);
+  background: var(--pink-soft);
+}
+
+.btn-hamburger .hb-line {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: var(--text-primary);
+  border-radius: 2px;
+  transition: transform 0.3s cubic-bezier(0.4,0,0.2,1), opacity 0.2s, width 0.3s;
+  transform-origin: center;
+}
+
+.btn-hamburger.open .hb-line:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.btn-hamburger.open .hb-line:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.btn-hamburger.open .hb-line:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* Dropdown do hamburguer */
+.hamburger-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 56px; /* alinha com o hamburguer */
+  min-width: 180px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  padding: 8px;
+  opacity: 0;
+  transform: translateY(-8px) scale(0.97);
+  pointer-events: none;
+  transition: opacity 0.22s ease, transform 0.22s cubic-bezier(0.4,0,0.2,1);
+  z-index: 200;
+}
+
+.hamburger-dropdown.open {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+.hamburger-dropdown .hb-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  transition: var(--transition-fast);
+}
+
+.hamburger-dropdown .hb-nav-link:hover {
+  background: var(--pink-soft);
+  color: var(--text-primary);
+}
+
+.hamburger-dropdown .hb-nav-link svg {
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+
+body.theme-light .hamburger-dropdown {
+  background: rgba(255,255,255,0.92);
+  border-color: rgba(124,58,237,0.18);
+  box-shadow: 0 8px 32px rgba(91,33,182,0.15);
+}
+
+/* Área de ações no header (hamburger + avatar) */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  position: relative;
+}
+
+/* Reposiciona o nav antigo (oculto, substituído pelo hamburger) */
+.header-nav { display: none !important; }
+
+/* Avatar header mantém o mesmo estilo já existente nas páginas */
+
+/* ════════════════════════════════════════════
+   BOTÃO LOGIN COM GOOGLE
+   ════════════════════════════════════════════ */
+.btn-google {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 13px 20px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-card-light);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition-mid);
+  text-decoration: none;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.btn-google:hover {
+  border-color: var(--border-active);
+  background: rgba(224, 64, 251, 0.08);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px var(--pink-glow);
+}
+
+.btn-google svg { flex-shrink: 0; }
+
+.google-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 18px 0;
+  color: var(--text-muted);
+  font-size: 12px;
+  font-family: var(--font-body);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.google-divider::before,
+.google-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border-subtle);
+}
+
+body.theme-light .btn-google {
+  background: rgba(255,255,255,0.8);
+  border-color: rgba(124,58,237,0.2);
+}
+
+body.theme-light .btn-google:hover {
+  border-color: rgba(184,134,11,0.5);
+  background: rgba(184,134,11,0.06);
+  box-shadow: 0 4px 16px rgba(184,134,11,0.2);
+}
+
+/* ════════════════════════════════════════════
+   BOTÃO LOGOUT (perfil)
+   ════════════════════════════════════════════ */
+.btn-logout {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 28px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255, 45, 85, 0.35);
+  background: rgba(255, 45, 85, 0.08);
+  color: #ff2d55;
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: var(--transition-mid);
+}
+
+.btn-logout:hover {
+  background: rgba(255, 45, 85, 0.16);
+  border-color: rgba(255, 45, 85, 0.6);
+  box-shadow: 0 4px 20px rgba(255, 45, 85, 0.25);
+  transform: translateY(-1px);
+}
+
+body.theme-light .btn-logout {
+  border-color: rgba(220, 38, 38, 0.3);
+  background: rgba(220, 38, 38, 0.06);
+  color: #dc2626;
+}
+
+body.theme-light .btn-logout:hover {
+  background: rgba(220, 38, 38, 0.12);
+  border-color: rgba(220, 38, 38, 0.5);
+  box-shadow: 0 4px 20px rgba(220, 38, 38, 0.2);
+}
+
+/* ════════════════════════════════════════════
+   TOAST de notificação (Google OAuth feedback)
+   ════════════════════════════════════════════ */
+.nexus-toast {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 14px 22px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--text-primary);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  z-index: 10000;
+  white-space: nowrap;
+}
+
+.nexus-toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.nexus-toast.toast-error { border-color: rgba(255, 45, 85, 0.45); }
+.nexus-toast.toast-success { border-color: var(--border-active); }
+
+/* ════════════════════════════════════════════
+   AVATAR DO HEADER (compartilhado)
+   Cobre pages que não tinham avatar próprio
+   ════════════════════════════════════════════ */
+.btn-avatar-header {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  transition: var(--transition-mid);
+}
+
+.avatar-header-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  position: relative;
+  z-index: 2;
+}
+
+.avatar-header-fallback {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: var(--bg-mid);
+  border: 1.5px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  position: relative;
+  z-index: 2;
+  transition: var(--transition-fast);
+}
+
+.btn-avatar-header:hover .avatar-header-fallback {
+  border-color: var(--border-active);
+  color: var(--text-primary);
+}
+
+.avatar-header-ring {
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--pink-neon), var(--violet-neon), var(--pink-neon));
+  background-size: 200% 200%;
+  opacity: 0;
+  transition: opacity var(--transition-mid);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.btn-avatar-header:hover .avatar-header-ring { opacity: 1; }

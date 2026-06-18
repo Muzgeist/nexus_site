@@ -84,6 +84,136 @@
   padding: 4px 14px;
 }
 
+.hero-right-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* ── Botão COMPRAR SELECIONADOS ──────────────── */
+.btn-comprar-selecionados {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 13px 22px;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  background: var(--bg-card);
+  border: 1px solid var(--border-active);
+  color: var(--text-primary) !important;
+}
+
+.btn-comprar-selecionados:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.btn-comprar-selecionados::before { display: none; }
+
+/* ── Selecionar todos ────────────────────────── */
+.carrinho-select-all {
+  display: flex;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+/* ── Checkbox customizado ────────────────────── */
+.checkbox-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.checkbox-wrap input[type="checkbox"].produto-checkbox {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.checkbox-box {
+  width: 20px;
+  height: 20px;
+  border-radius: 6px;
+  border: 1.5px solid var(--border-subtle);
+  background: var(--bg-card);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: var(--transition-fast);
+  position: relative;
+}
+
+.checkbox-box::after {
+  content: '';
+  width: 10px;
+  height: 7px;
+  border-left: 2.4px solid #fff;
+  border-bottom: 2.4px solid #fff;
+  transform: rotate(-45deg) scale(0);
+  transition: transform 0.18s ease;
+  margin-top: -2px;
+}
+
+.checkbox-wrap input:checked ~ .checkbox-box {
+  background: linear-gradient(135deg, var(--pink-neon), var(--purple-600));
+  border-color: var(--pink-neon);
+}
+
+.checkbox-wrap input:checked ~ .checkbox-box::after {
+  transform: rotate(-45deg) scale(1);
+}
+
+.checkbox-wrap input:indeterminate ~ .checkbox-box {
+  background: var(--bg-card);
+  border-color: var(--border-active);
+}
+
+.checkbox-wrap:hover .checkbox-box {
+  border-color: var(--border-active);
+}
+
+.checkbox-label {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+/* Checkbox dentro do card de produto */
+.produto-card-select {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 5;
+}
+
+.produto-card-select .checkbox-box {
+  background: rgba(10, 0, 20, 0.55);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+body.theme-light .produto-card-select .checkbox-box {
+  background: rgba(255, 255, 255, 0.78);
+}
+
+.produto-img-wrap { position: relative; }
+
+/* Card com seleção ativa — leve destaque visual */
+.produto-card.is-selected {
+  border-color: var(--border-active);
+  box-shadow:
+    var(--shadow-card),
+    0 0 0 2px var(--pink-glow);
+}
+
 /* ── Botão COMPRAR TUDO ─────────────────────── */
 .btn-comprar-tudo {
   display: flex;
@@ -462,6 +592,9 @@
   }
 
   .btn-comprar-tudo { width: 100%; justify-content: center; }
+
+  .hero-right-actions { width: 100%; flex-direction: column; }
+  .btn-comprar-selecionados { width: 100%; justify-content: center; }
 
   .produto-actions { flex-direction: column; }
   .btn-comprar-individual { width: 100%; }

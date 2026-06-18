@@ -24,11 +24,31 @@
       <div class="logo-icon"><img src="../img/nexus-logo.png" alt="Nexus Logo"></div>
     <span class="logo-text">NEXUS IMPORTS</span>
     </a>
-    <nav class="header-nav">
-      <a href="telaprodutos.html" class="nav-link">Produtos</a>
-      <a href="telausuario.html" class="nav-link">Perfil</a>
-      <a href="telacompras.html" class="nav-link">Compras</a>
-    </nav>
+    <div class="header-actions">
+      <button class="btn-hamburger" id="btnHamburger" aria-label="Menu de navegação" aria-expanded="false">
+        <span class="hb-line"></span>
+        <span class="hb-line"></span>
+        <span class="hb-line"></span>
+      </button>
+      <div class="hamburger-dropdown" id="hamburgerDropdown" role="menu">
+        <a href="telaprodutos.html" class="hb-nav-link" role="menuitem">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+          Produtos
+        </a>
+        <a href="telacompras.html" class="hb-nav-link" role="menuitem">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          Compras
+        </a>
+      </div>
+      <a href="telausuario.html" class="btn-avatar-header" aria-label="Meu perfil" title="Meu perfil">
+        <div class="avatar-header-fallback">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+          </svg>
+        </div>
+        <span class="avatar-header-ring" aria-hidden="true"></span>
+      </a>
+    </div>
   </header>
 
   <main class="carrinho-main">
@@ -46,15 +66,34 @@
         <span class="badge-count" id="badgeCount">0 itens</span>
       </div>
 
-      <!-- BOTÃO COMPRAR TUDO — destaque máximo -->
-      <button type="button" class="btn-nexus btn-comprar-tudo" id="btnComprarTudo">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="flex-shrink:0">
-          <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
-          <line x1="3" y1="6" x2="21" y2="6"/>
-          <path d="M16 10a4 4 0 0 1-8 0"/>
-        </svg>
-        <span>Comprar Tudo</span>
-      </button>
+      <div class="hero-right-actions">
+        <!-- BOTÃO COMPRAR SELECIONADOS — ativo apenas quando há seleção -->
+        <button type="button" class="btn-nexus btn-comprar-selecionados" id="btnComprarSelecionados" disabled>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="flex-shrink:0">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+          <span>Comprar Selecionados <span id="countSelecionados">(0)</span></span>
+        </button>
+
+        <!-- BOTÃO COMPRAR TUDO — destaque máximo -->
+        <button type="button" class="btn-nexus btn-comprar-tudo" id="btnComprarTudo">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="flex-shrink:0">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+            <line x1="3" y1="6" x2="21" y2="6"/>
+            <path d="M16 10a4 4 0 0 1-8 0"/>
+          </svg>
+          <span>Comprar Tudo</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Selecionar todos -->
+    <div class="carrinho-select-all reveal">
+      <label class="checkbox-wrap">
+        <input type="checkbox" id="checkSelectAll" class="produto-checkbox">
+        <span class="checkbox-box" aria-hidden="true"></span>
+        <span class="checkbox-label">Selecionar todos</span>
+      </label>
     </div>
 
     <!-- Grid de produtos (máx. 3 por linha) -->
