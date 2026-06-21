@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nexus Imports — Minhas Compras</title>
+  <title>Nexus Imports — Meus Pedidos</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Exo+2:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
@@ -13,6 +13,9 @@
 <body>
 
 <div class="nexus-bg" aria-hidden="true"></div>
+
+<!-- Toast de feedback -->
+<div class="toast" id="toast" aria-live="polite"></div>
 
 <!-- Modal de confirmação de cancelamento -->
 <div class="modal-overlay" id="modalOverlay" aria-hidden="true">
@@ -75,98 +78,29 @@
           <line x1="16" y1="13" x2="8" y2="13"/>
           <line x1="16" y1="17" x2="8" y2="17"/>
         </svg>
-        Minhas Compras
+        Meus Pedidos
       </h1>
     </div>
 
-    <section class="compras-lista" id="lista-compras">
+    <!-- Loader -->
+    <div class="compras-loader" id="comprasLoader">
+      <div class="loader-ring"></div>
+      <span>Carregando seus pedidos…</span>
+    </div>
 
-      <!-- EXEMPLO — backend irá preencher -->
-      <article class="compra-card reveal reveal-delay-1" data-pedido="#0001">
-        <div class="compra-accent"></div>
-        <div class="compra-top">
-          <span class="compra-numero">#0001</span>
-          <span class="compra-status compra-status--separacao">Em Separação</span>
-          <button class="btn-cancelar-compra" aria-label="Cancelar pedido #0001">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-              <circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>
-            </svg>
-            Cancelar Pedido
-          </button>
-        </div>
-        <div class="compra-body">
-          <div class="compra-field">
-            <span class="field-label">Produto</span>
-            <span class="field-value">Nome do Produto</span>
-          </div>
-          <div class="compra-field">
-            <span class="field-label">Quantidade</span>
-            <span class="field-value">2</span>
-          </div>
-          <div class="compra-field">
-            <span class="field-label">Valor Total</span>
-            <span class="field-value field-value--price">R$ 100,00</span>
-          </div>
-        </div>
-      </article>
+    <!-- Estado vazio -->
+    <div class="compras-vazio" id="comprasVazio" style="display:none;">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+        <polyline points="14 2 14 8 20 8"/>
+      </svg>
+      <h2>Você ainda não fez nenhum pedido</h2>
+      <p>Explore nossos produtos e faça sua primeira compra.</p>
+      <a href="telaprodutos.html" class="btn-nexus"><span>Ver produtos</span></a>
+    </div>
 
-      <article class="compra-card reveal reveal-delay-2" data-pedido="#0002">
-        <div class="compra-accent compra-accent--done"></div>
-        <div class="compra-top">
-          <span class="compra-numero">#0002</span>
-          <span class="compra-status compra-status--entregue">Entregue</span>
-          <!-- Pedido entregue não pode ser cancelado -->
-          <button class="btn-cancelar-compra btn-cancelar--disabled" disabled aria-label="Não é possível cancelar pedido entregue">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-              <circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>
-            </svg>
-            Cancelar Pedido
-          </button>
-        </div>
-        <div class="compra-body">
-          <div class="compra-field">
-            <span class="field-label">Produto</span>
-            <span class="field-value">Outro Produto</span>
-          </div>
-          <div class="compra-field">
-            <span class="field-label">Quantidade</span>
-            <span class="field-value">1</span>
-          </div>
-          <div class="compra-field">
-            <span class="field-label">Valor Total</span>
-            <span class="field-value field-value--price">R$ 50,00</span>
-          </div>
-        </div>
-      </article>
-
-      <article class="compra-card reveal reveal-delay-3" data-pedido="#0003">
-        <div class="compra-accent compra-accent--transit"></div>
-        <div class="compra-top">
-          <span class="compra-numero">#0003</span>
-          <span class="compra-status compra-status--transito">Em Trânsito</span>
-          <button class="btn-cancelar-compra" aria-label="Cancelar pedido #0003">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-              <circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>
-            </svg>
-            Cancelar Pedido
-          </button>
-        </div>
-        <div class="compra-body">
-          <div class="compra-field">
-            <span class="field-label">Produto</span>
-            <span class="field-value">Terceiro Produto</span>
-          </div>
-          <div class="compra-field">
-            <span class="field-label">Quantidade</span>
-            <span class="field-value">3</span>
-          </div>
-          <div class="compra-field">
-            <span class="field-label">Valor Total</span>
-            <span class="field-value field-value--price">R$ 280,00</span>
-          </div>
-        </div>
-      </article>
-
+    <section class="compras-lista" id="lista-compras" style="display:none;">
+      <!-- Preenchido dinamicamente por telacompras.js -->
     </section>
 
   </main>

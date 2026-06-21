@@ -1,0 +1,225 @@
+/* ============================================
+   NEXUS — Tela de Rastreio de Envio
+   ============================================ */
+
+.rastreio-main {
+  flex: 1;
+  max-width: 980px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 36px 32px 80px;
+}
+
+.btn-voltar-pedidos {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-decoration: none;
+  margin-bottom: 28px;
+  transition: var(--transition-fast);
+}
+.btn-voltar-pedidos:hover { color: var(--text-primary); }
+
+/* ── Loader / Erro ──────────────────────────── */
+.rastreio-loader, .rastreio-erro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 14px;
+  padding: 90px 24px;
+  color: var(--text-muted);
+}
+.rastreio-erro svg { opacity: 0.4; }
+.rastreio-erro h2 {
+  font-family: var(--font-display);
+  font-size: 17px;
+  color: var(--text-primary);
+}
+.rastreio-loader .loader-ring {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  border: 3px solid rgba(255,255,255,0.15);
+  border-top-color: var(--pink-neon);
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Hero ────────────────────────────────────── */
+.rastreio-hero { margin-bottom: 28px; }
+.page-title {
+  font-family: var(--font-display);
+  font-size: clamp(18px, 3vw, 24px);
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: var(--text-primary);
+}
+.page-title span { color: var(--pink-bright); }
+.rastreio-produto { color: var(--text-muted); font-size: 14px; margin-top: 6px; padding-left: 36px; }
+
+/* ── Stepper / Linha do tempo ───────────────── */
+.rastreio-stepper {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 28px 24px;
+  margin-bottom: 24px;
+  box-shadow: var(--shadow-card);
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  flex: 0 0 auto;
+  width: 80px;
+}
+
+.step-dot {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.06);
+  border: 2px solid var(--border-subtle);
+  transition: var(--transition-mid);
+  position: relative;
+}
+
+.step-label {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-align: center;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.step-line {
+  flex: 1;
+  height: 2px;
+  background: var(--border-subtle);
+  margin-top: 9px;
+  transition: var(--transition-mid);
+}
+
+/* Estados: concluído / atual */
+.step.is-done .step-dot {
+  background: var(--purple-500);
+  border-color: var(--pink-neon);
+  box-shadow: 0 0 10px var(--pink-glow);
+}
+.step.is-done .step-label { color: var(--text-primary); }
+.step.is-current .step-dot {
+  background: var(--pink-neon);
+  border-color: var(--pink-bright);
+  box-shadow: 0 0 16px var(--pink-glow), 0 0 0 4px rgba(224,64,251,0.15);
+  animation: pulseDot 1.6s ease-in-out infinite;
+}
+.step.is-current .step-label { color: var(--text-primary); }
+.step-line.is-done { background: linear-gradient(90deg, var(--purple-500), var(--pink-neon)); }
+
+@keyframes pulseDot {
+  0%, 100% { box-shadow: 0 0 16px var(--pink-glow), 0 0 0 4px rgba(224,64,251,0.15); }
+  50% { box-shadow: 0 0 22px var(--pink-glow), 0 0 0 7px rgba(224,64,251,0.08); }
+}
+
+.step.is-cancelado .step-dot {
+  background: rgba(255,45,85,0.2);
+  border-color: var(--error);
+}
+
+/* ── Info pills ──────────────────────────────── */
+.rastreio-info-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.info-pill {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.info-pill .field-label {
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.info-pill .field-value {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+/* ── Mapa ────────────────────────────────────── */
+.mapa-wrap {
+  position: relative;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-card);
+}
+
+.mapa-rastreio {
+  width: 100%;
+  height: 440px;
+  background: var(--bg-mid);
+}
+
+.mapa-config-aviso {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 12px;
+  padding: 36px;
+  background: rgba(10,0,16,0.92);
+  backdrop-filter: blur(6px);
+  color: var(--text-muted);
+}
+.mapa-config-aviso svg { opacity: 0.5; color: var(--purple-300); }
+.mapa-config-aviso h3 {
+  font-family: var(--font-display);
+  font-size: 15px;
+  color: var(--text-primary);
+  max-width: 420px;
+}
+.mapa-config-aviso p { font-size: 13px; max-width: 440px; line-height: 1.6; }
+.mapa-config-aviso code {
+  background: rgba(255,255,255,0.08);
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 12px;
+  color: var(--purple-200);
+}
+
+/* ── Responsivo ──────────────────────────────── */
+@media (max-width: 700px) {
+  .rastreio-main { padding: 24px 16px 60px; }
+  .rastreio-info-row { grid-template-columns: 1fr; }
+  .rastreio-stepper { padding: 22px 12px; }
+  .step { width: 64px; }
+  .step-label { font-size: 9.5px; }
+  .mapa-rastreio { height: 320px; }
+}

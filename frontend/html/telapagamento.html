@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nexus Imports — Pagamento</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Exo+2:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/nexus-shared.css">
+  <link rel="stylesheet" href="../css/telapagamento.css">
+</head>
+<body>
+
+<div class="nexus-bg nexus-bg--light" aria-hidden="true"></div>
+
+<!-- Toast de feedback -->
+<div class="toast" id="toast" aria-live="polite"></div>
+
+<!-- Overlay de sucesso -->
+<div class="sucesso-overlay" id="sucessoOverlay" aria-hidden="true">
+  <div class="sucesso-box">
+    <div class="sucesso-icon">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
+        <polyline points="20 6 9 17 4 12"/>
+      </svg>
+    </div>
+    <h2 class="sucesso-title">Pedido confirmado!</h2>
+    <p class="sucesso-desc">Seu pagamento foi aprovado. Você será redirecionado para <strong>Meus Pedidos</strong> em <span id="sucessoCountdown">3</span>s.</p>
+    <a href="telacompras.html" class="btn-nexus"><span>Ver meus pedidos agora</span></a>
+  </div>
+</div>
+
+<div class="page-wrapper">
+
+  <header class="nexus-header">
+    <a href="telaprincipal.html" class="logo-home-link" aria-label="Voltar à página principal">
+      <div class="logo-icon"><img src="../img/nexus-logo.png" alt="Nexus Logo"></div>
+      <span class="logo-text">NEXUS IMPORTS</span>
+    </a>
+    <div class="header-actions">
+      <button class="btn-hamburger" id="btnHamburger" aria-label="Menu de navegação" aria-expanded="false">
+        <span class="hb-line"></span>
+        <span class="hb-line"></span>
+        <span class="hb-line"></span>
+      </button>
+      <div class="hamburger-dropdown" id="hamburgerDropdown" role="menu">
+        <a href="telaprodutos.html" class="hb-nav-link" role="menuitem">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+          Produtos
+        </a>
+        <a href="telacarrinho.html" class="hb-nav-link" role="menuitem">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>
+          Carrinho
+        </a>
+        <a href="telacompras.html" class="hb-nav-link" role="menuitem">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          Pedidos
+        </a>
+      </div>
+      <button class="btn-avatar-header" id="btnAvatarHeader" aria-label="Meu perfil" title="Meu perfil">
+        <img id="avatarHeaderImg" src="" alt="" class="avatar-header-img" style="display:none;">
+        <div class="avatar-header-fallback" id="avatarHeaderFallback">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+          </svg>
+        </div>
+        <span class="avatar-header-ring" aria-hidden="true"></span>
+      </button>
+    </div>
+  </header>
+
+  <main class="pagamento-main">
+
+    <div class="pagamento-hero reveal">
+      <h1 class="page-title">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="vertical-align:middle;margin-right:10px">
+          <rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/>
+        </svg>
+        Finalizar Pagamento
+      </h1>
+    </div>
+
+    <!-- Estado vazio: sem pedido pendente -->
+    <div class="pagamento-vazio" id="pagamentoVazio" style="display:none;">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+        <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+        <path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/>
+      </svg>
+      <h2>Nenhum pedido pendente</h2>
+      <p>Volte ao carrinho ou escolha um produto para continuar a compra.</p>
+      <a href="telacarrinho.html" class="btn-nexus"><span>Ir para o carrinho</span></a>
+    </div>
+
+    <!-- Conteúdo principal do checkout -->
+    <div class="pagamento-grid" id="pagamentoGrid" style="display:none;">
+
+      <!-- ── Coluna esquerda: formas de pagamento ── -->
+      <section class="pagamento-col-form reveal reveal-delay-1">
+
+        <div class="metodo-tabs" role="tablist" aria-label="Forma de pagamento">
+          <button type="button" class="metodo-tab active" data-metodo="pix" role="tab" aria-selected="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l4 4-4 4-4-4 4-4zm0 12l4 4-4 4-4-4 4-4zM2 12l4-4 4 4-4 4-4-4zm16 0l4-4 4 4-4 4-4-4z"/></svg>
+            Pix
+          </button>
+          <button type="button" class="metodo-tab" data-metodo="cartao" role="tab" aria-selected="false">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+            Cartão
+          </button>
+          <button type="button" class="metodo-tab" data-metodo="boleto" role="tab" aria-selected="false">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="3" height="18"/><rect x="9" y="3" width="1.5" height="18"/><rect x="13" y="3" width="3" height="18"/><rect x="19" y="3" width="1.5" height="18"/></svg>
+            Boleto
+          </button>
+        </div>
+
+        <!-- ── PIX ───────────────────────────── -->
+        <div class="metodo-painel" id="painelPix" data-painel="pix">
+          <p class="metodo-desc">Pagamento instantâneo. Escaneie o QR Code com o app do seu banco ou copie o código abaixo.</p>
+
+          <button type="button" class="btn-nexus" id="btnGerarPix">
+            <span>Gerar QR Code Pix</span>
+          </button>
+
+          <div class="pix-resultado" id="pixResultado" style="display:none;">
+            <div class="pix-qr-box" id="pixQrcodeBox" aria-label="QR Code Pix"></div>
+
+            <label class="pix-label" for="pixCopiaCola">Pix Copia e Cola</label>
+            <div class="pix-copia-wrap">
+              <input type="text" id="pixCopiaCola" class="pix-copia-input" readonly>
+              <button type="button" class="btn-copiar" id="btnCopiarPix" aria-label="Copiar código Pix">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              </button>
+            </div>
+
+            <div class="pix-status" id="pixStatus">
+              <div class="loader-ring loader-ring--sm"></div>
+              <span>Aguardando confirmação do pagamento…</span>
+            </div>
+
+            <button type="button" class="btn-nexus btn-simular" id="btnSimularPix">
+              <span>Já paguei (simular confirmação)</span>
+            </button>
+            <p class="metodo-aviso">Em produção, esta confirmação chega automaticamente via webhook do seu provedor Pix — aqui é só uma simulação de demonstração.</p>
+          </div>
+        </div>
+
+        <!-- ── CARTÃO ────────────────────────── -->
+        <div class="metodo-painel" id="painelCartao" data-painel="cartao" hidden>
+          <div class="cartao-tipo-toggle" role="radiogroup" aria-label="Tipo de cartão">
+            <label class="tipo-pill">
+              <input type="radio" name="tipoCartao" value="CREDITO" checked>
+              <span>Crédito</span>
+            </label>
+            <label class="tipo-pill">
+              <input type="radio" name="tipoCartao" value="DEBITO">
+              <span>Débito</span>
+            </label>
+          </div>
+
+          <form class="cartao-form" id="cartaoForm" autocomplete="off">
+            <label class="campo-label" for="cartaoNumero">Número do cartão</label>
+            <div class="campo-input-wrap">
+              <input type="text" id="cartaoNumero" class="campo-input" inputmode="numeric" placeholder="0000 0000 0000 0000" maxlength="19" required>
+              <span class="bandeira-badge" id="bandeiraBadge">—</span>
+            </div>
+
+            <label class="campo-label" for="cartaoNome">Nome impresso no cartão</label>
+            <input type="text" id="cartaoNome" class="campo-input" placeholder="NOME COMO ESTÁ NO CARTÃO" required>
+
+            <div class="campo-row">
+              <div>
+                <label class="campo-label" for="cartaoValidade">Validade</label>
+                <input type="text" id="cartaoValidade" class="campo-input" inputmode="numeric" placeholder="MM/AA" maxlength="5" required>
+              </div>
+              <div>
+                <label class="campo-label" for="cartaoCvv">CVV</label>
+                <input type="text" id="cartaoCvv" class="campo-input" inputmode="numeric" placeholder="123" maxlength="4" required>
+              </div>
+            </div>
+
+            <div id="parcelasWrap">
+              <label class="campo-label" for="cartaoParcelas">Parcelas</label>
+              <select id="cartaoParcelas" class="campo-input">
+                <option value="1">1x sem juros</option>
+                <option value="2">2x sem juros</option>
+                <option value="3">3x sem juros</option>
+                <option value="6">6x sem juros</option>
+                <option value="12">12x sem juros</option>
+              </select>
+            </div>
+
+            <button type="submit" class="btn-nexus" id="btnPagarCartao">
+              <span>Pagar com cartão</span>
+            </button>
+            <p class="metodo-aviso">Seus dados completos do cartão não são enviados ao nosso servidor — apenas bandeira e últimos dígitos, para exibição no histórico. Esta é uma simulação de aprovação para fins de demonstração.</p>
+          </form>
+        </div>
+
+        <!-- ── BOLETO ────────────────────────── -->
+        <div class="metodo-painel" id="painelBoleto" data-painel="boleto" hidden>
+          <p class="metodo-desc">O boleto vence em 3 dias úteis. Após o pagamento, a confirmação pode levar até 1 dia útil.</p>
+
+          <button type="button" class="btn-nexus" id="btnGerarBoleto">
+            <span>Gerar Boleto</span>
+          </button>
+
+          <div class="boleto-resultado" id="boletoResultado" style="display:none;">
+            <div class="boleto-card" id="boletoPrintArea">
+              <div class="boleto-barras" aria-hidden="true" id="boletoBarras"></div>
+              <div class="boleto-linha-row">
+                <span class="boleto-linha" id="boletoLinhaDigitavel">—</span>
+              </div>
+              <div class="boleto-info-row">
+                <div>
+                  <span class="field-label">Vencimento</span>
+                  <span class="field-value" id="boletoVencimento">—</span>
+                </div>
+                <div>
+                  <span class="field-label">Valor</span>
+                  <span class="field-value field-value--price" id="boletoValor">—</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="boleto-acoes">
+              <button type="button" class="btn-copiar btn-copiar--wide" id="btnCopiarBoleto">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                Copiar código de barras
+              </button>
+              <button type="button" class="btn-copiar btn-copiar--wide" id="btnImprimirBoleto">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                Imprimir
+              </button>
+            </div>
+
+            <button type="button" class="btn-nexus btn-simular" id="btnSimularBoleto">
+              <span>Simular pagamento do boleto</span>
+            </button>
+            <p class="metodo-aviso">Linha digitável gerada apenas para demonstração — emitir um boleto real exige convênio de cobrança com um banco ou PSP de boletos.</p>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ── Coluna direita: resumo do pedido ── -->
+      <aside class="pagamento-col-resumo reveal reveal-delay-2">
+        <div class="resumo-card">
+          <h2 class="resumo-titulo">Resumo do pedido</h2>
+          <div class="resumo-itens" id="resumoItens"><!-- preenchido via JS --></div>
+          <div class="resumo-divider"></div>
+          <div class="resumo-row resumo-row--total">
+            <span>Total</span>
+            <strong id="resumoTotal">R$ 0,00</strong>
+          </div>
+        </div>
+      </aside>
+
+    </div>
+
+  </main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="../js/nexus-shared.js"></script>
+<script src="../js/telapagamento.js"></script>
+</body>
+</html>

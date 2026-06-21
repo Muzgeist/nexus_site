@@ -37,7 +37,7 @@
         </a>
         <a href="telacompras.html" class="hb-nav-link" role="menuitem">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-          Compras
+          Pedidos
         </a>
       </div>
       <a href="telausuario.html" class="btn-avatar-header" aria-label="Meu perfil" title="Meu perfil">
@@ -98,130 +98,19 @@
 
     <!-- Grid de produtos (máx. 3 por linha) -->
     <section class="produtos-grid reveal reveal-delay-1" id="lista-pedidos" aria-label="Produtos no carrinho">
-
-      <!-- EXEMPLO — remover quando backend integrado -->
-      <!-- Estrutura padrão de card: data-estoque define o limite de quantidade -->
-      <article class="produto-card reveal" data-estoque="10">
-        <div class="produto-img-wrap">
-          <div class="produto-img-placeholder">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
-              <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>
-            </svg>
-          </div>
-        </div>
-        <div class="produto-info">
-          <span class="produto-categoria">GPU</span>
-          <h3 class="produto-nome">RTX 4080 Super</h3>
-          <!-- Controle de quantidade editável -->
-          <div class="produto-qty-ctrl">
-            <button class="qty-btn qty-btn--minus" aria-label="Diminuir quantidade">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            </button>
-            <input
-              type="number"
-              class="qty-input"
-              value="1"
-              min="1"
-              max="10"
-              aria-label="Quantidade"
-            >
-            <button class="qty-btn qty-btn--plus" aria-label="Aumentar quantidade">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            </button>
-            <span class="qty-estoque" aria-label="Estoque disponível">/ 10 em estoque</span>
-          </div>
-        </div>
-        <div class="produto-actions">
-          <button class="btn-comprar-individual" aria-label="Comprar este produto">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/>
-            </svg>
-            Comprar
-          </button>
-          <button class="btn-remove" aria-label="Remover produto">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/>
-            </svg>
-          </button>
-        </div>
-      </article>
-
-      <article class="produto-card reveal reveal-delay-1" data-estoque="5">
-        <div class="produto-img-wrap">
-          <div class="produto-img-placeholder">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
-              <rect x="2" y="6" width="20" height="12" rx="2"/><path d="M22 10H2M6 14h.01M10 14h.01"/>
-            </svg>
-          </div>
-        </div>
-        <div class="produto-info">
-          <span class="produto-categoria">RAM</span>
-          <h3 class="produto-nome">DDR5 32GB Kit</h3>
-          <div class="produto-qty-ctrl">
-            <button class="qty-btn qty-btn--minus" aria-label="Diminuir quantidade">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            </button>
-            <input type="number" class="qty-input" value="2" min="1" max="5" aria-label="Quantidade">
-            <button class="qty-btn qty-btn--plus" aria-label="Aumentar quantidade">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            </button>
-            <span class="qty-estoque">/ 5 em estoque</span>
-          </div>
-        </div>
-        <div class="produto-actions">
-          <button class="btn-comprar-individual" aria-label="Comprar este produto">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/>
-            </svg>
-            Comprar
-          </button>
-          <button class="btn-remove" aria-label="Remover produto">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/>
-            </svg>
-          </button>
-        </div>
-      </article>
-
-      <article class="produto-card reveal reveal-delay-2" data-estoque="3">
-        <div class="produto-img-wrap">
-          <div class="produto-img-placeholder">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
-              <rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 9h6M9 12h6M9 15h4"/>
-            </svg>
-          </div>
-        </div>
-        <div class="produto-info">
-          <span class="produto-categoria">SSD</span>
-          <h3 class="produto-nome">NVMe 2TB Gen5</h3>
-          <div class="produto-qty-ctrl">
-            <button class="qty-btn qty-btn--minus" aria-label="Diminuir quantidade">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            </button>
-            <input type="number" class="qty-input" value="1" min="1" max="3" aria-label="Quantidade">
-            <button class="qty-btn qty-btn--plus" aria-label="Aumentar quantidade">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            </button>
-            <span class="qty-estoque">/ 3 em estoque</span>
-          </div>
-        </div>
-        <div class="produto-actions">
-          <button class="btn-comprar-individual" aria-label="Comprar este produto">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/>
-            </svg>
-            Comprar
-          </button>
-          <button class="btn-remove" aria-label="Remover produto">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/>
-            </svg>
-          </button>
-        </div>
-      </article>
-      <!-- /EXEMPLO -->
-
+      <!-- Preenchido dinamicamente por telacarrinho.js a partir do carrinho salvo -->
     </section>
+
+    <!-- Carrinho vazio -->
+    <div class="carrinho-vazio" id="carrinhoVazio" style="display:none;">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+        <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+        <path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/>
+      </svg>
+      <h2>Seu carrinho está vazio</h2>
+      <p>Adicione produtos para vê-los aqui.</p>
+      <a href="telaprodutos.html" class="btn-nexus"><span>Ver produtos</span></a>
+    </div>
 
     <!-- Resumo -->
     <div class="carrinho-resumo reveal reveal-delay-2">

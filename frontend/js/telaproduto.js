@@ -245,88 +245,25 @@
     showToast(`✓ ${qty}× ${produtoAtual.produto} adicionado ao carrinho`, 'success');
   });
 
-  /* ── 10. COMPRA DIRETA (modal + POST) ────────── */
-  let pendingCompra = null;
-
+  /* ── 10. COMPRA DIRETA → redireciona para telapagamento.html ── */
   btnComprar && btnComprar.addEventListener('click', () => {
     if (!produtoAtual) return;
-    const qty   = getQty();
-    const total = qty * parseFloat(produtoAtual.valor_unitario);
-    pendingCompra = { produto_id: produtoAtual.id, quantidade: qty };
+    const qty = getQty();
 
-    modalBody.innerHTML = `
-      <strong>${produtoAtual.produto}</strong><br>
-      Quantidade: <strong>${qty}</strong><br>
-      Total: <strong>${fmt(total)}</strong><br><br>
-      Confirmar a compra direta deste produto?`;
+    const pedidoPendente = {
+      origem: 'produto',
+      itens: [{
+        produto_id:     produtoAtual.id,
+        produto:        produtoAtual.produto,
+        categoria:      produtoAtual.categoria,
+        valor_unitario: produtoAtual.valor_unitario,
+        imagem_url:     produtoAtual.imagem_url,
+        quantidade:     qty
+      }]
+    };
 
-    modalOverlay.classList.add('visible');
-    modalOverlay.setAttribute('aria-hidden', 'false');
-    modalConfirm.focus();
-  });
-
-  function fecharModal() {
-    modalOverlay.classList.remove('visible');
-    modalOverlay.setAttribute('aria-hidden', 'true');
-    pendingCompra = null;
-  }
-
-  modalCancel.addEventListener('click', fecharModal);
-  modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) fecharModal(); });
-  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') fecharModal(); });
-
-  modalConfirm.addEventListener('click', async () => {
-    if (!pendingCompra || !usuario.id) return;
-
-    modalConfirm.disabled = true;
-    modalConfirm.innerHTML = '<div class="loader-ring" style="width:16px;height:16px;border-width:2px"></div><span>Processando…</span>';
-
-    try {
-      const res = await fetch(`${API}/compra`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          usuario_id: usuario.id,
-          itens: [pendingCompra]
-        })
-      });
-      const data = await res.json();
-
-      fecharModal();
-      modalConfirm.disabled = false;
-      modalConfirm.innerHTML = '<span>Confirmar compra</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>';
-
-      if (res.ok) {
-        showToast('✓ Compra realizada com sucesso!', 'success', 3500);
-        // Atualiza estoque local
-        const novo = (parseInt(produtoAtual.quantidade) || 0) - pendingCompra.quantidade;
-        produtoAtual.quantidade = Math.max(0, novo);
-        qtyInput.max = produtoAtual.quantidade;
-        if (produtoAtual.quantidade <= 0) {
-          qtySection.style.display = 'none';
-          produtoAcoes.style.display = 'none';
-          semEstoque.style.display = 'flex';
-          estoqueDot.className = 'estoque-dot estoque-dot--zero';
-          estoqueLabel.textContent = 'Sem estoque';
-        } else {
-          const baixo = produtoAtual.quantidade <= 5;
-          estoqueDot.className = 'estoque-dot' + (baixo ? ' estoque-dot--baixo' : '');
-          estoqueLabel.textContent = baixo
-            ? `Estoque baixo — apenas ${produtoAtual.quantidade} unidade${produtoAtual.quantidade > 1 ? 's' : ''}`
-            : `${produtoAtual.quantidade} unidades disponíveis`;
-          qtyInput.value = 1;
-          atualizarTotal();
-        }
-        setTimeout(() => window.location.href = 'telacompras.html', 2000);
-      } else {
-        showToast(data.erro || 'Erro ao processar compra.', 'error');
-      }
-    } catch (err) {
-      fecharModal();
-      modalConfirm.disabled = false;
-      modalConfirm.innerHTML = '<span>Confirmar compra</span>';
-      showToast('Erro de conexão. Tente novamente.', 'error');
-    }
+    sessionStorage.setItem('pedidoPendente', JSON.stringify(pedidoPendente));
+    window.location.href = 'telapagamento.html';
   });
 
 })();
