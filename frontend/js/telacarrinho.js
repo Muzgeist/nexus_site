@@ -1,15 +1,35 @@
-/* ============================================
+/* ============================================================
    NEXUS — Tela de Carrinho JS
-   Quantidade editável, compra individual, comprar tudo
-   ============================================ */
+   Carrega o carrinho real salvo em sessionStorage (preenchido
+   pela tela de produto), permite editar quantidade, remover
+   itens e redireciona QUALQUER botão de compra (individual,
+   selecionados, tudo ou finalizar) para telapagamento.html,
+   levando os itens e valores corretos.
+   ============================================================ */
 
 (function () {
   'use strict';
 
-  // ── Toast ────────────────────────────────────
+  /* ── 1. GUARD DE AUTENTICAÇÃO ────────────────── */
+  const usuarioRaw = sessionStorage.getItem('usuario');
+  if (!usuarioRaw) { window.location.replace('telalogin.html'); return; }
+  let usuario = {};
+  try { usuario = JSON.parse(usuarioRaw); }
+  catch (e) { window.location.replace('telalogin.html'); return; }
+
+  /* ── 2. AVATAR HEADER ───────────────────────── */
+  const avatarImg      = document.getElementById('avatarHeaderImg');
+  const avatarFallback = document.getElementById('avatarHeaderFallback');
+  const fotoSalva      = sessionStorage.getItem('fotoPerfil');
+  if (avatarImg && fotoSalva) {
+    avatarImg.src = fotoSalva;
+    avatarImg.style.display = 'block';
+    if (avatarFallback) avatarFallback.style.display = 'none';
+  }
+
+  /* ── 3. TOAST ─────────────────────────────────── */
   const toast = document.getElementById('toast');
   let toastTimer = null;
-
   function showToast(msg) {
     if (!toast) return;
     toast.textContent = msg;
@@ -18,19 +38,130 @@
     toastTimer = setTimeout(() => toast.classList.remove('show'), 2600);
   }
 
-  // ── Atualiza contagem de itens ───────────────
+  function fmt(v) {
+    return parseFloat(v || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  }
+
+  function escapeHtml(str) {
+    return String(str ?? '').replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+  }
+
+  /* ── 4. CARRINHO (sessionStorage) ────────────── */
+  function getCarrinho() {
+    try { return JSON.parse(sessionStorage.getItem('carrinho') || '[]'); }
+    catch (e) { return []; }
+  }
+  function salvarCarrinho(c) { sessionStorage.setItem('carrinho', JSON.stringify(c)); }
+
+  const grid          = document.getElementById('lista-pedidos');
+  const carrinhoVazio = document.getElementById('carrinhoVazio');
+
+  function imagemOuPlaceholder(item) {
+    if (item.imagem_url) {
+      return `<img src="${escapeHtml(item.imagem_url)}" alt="${escapeHtml(item.produto)}" loading="lazy">`;
+    }
+    return `
+      <div class="produto-img-placeholder">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+          <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>
+        </svg>
+      </div>`;
+  }
+
+  function cardTemplate(item) {
+    const estoque = parseInt(item.estoque) || 99;
+    const qty     = Math.min(parseInt(item.quantidade) || 1, estoque);
+    return `
+      <article class="produto-card reveal" data-produto-id="${item.id}" data-estoque="${estoque}" data-preco="${item.valor_unitario}" data-categoria="${escapeHtml(item.categoria || '')}">
+        <div class="produto-img-wrap">${imagemOuPlaceholder(item)}</div>
+        <div class="produto-info">
+          <span class="produto-categoria">${escapeHtml(item.categoria || '')}</span>
+          <h3 class="produto-nome">${escapeHtml(item.produto)}</h3>
+          <span class="produto-preco-unit">${fmt(item.valor_unitario)} / un.</span>
+          <div class="produto-qty-ctrl">
+            <button class="qty-btn qty-btn--minus" aria-label="Diminuir quantidade">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </button>
+            <input type="number" class="qty-input" value="${qty}" min="1" max="${estoque}" aria-label="Quantidade">
+            <button class="qty-btn qty-btn--plus" aria-label="Aumentar quantidade">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </button>
+            <span class="qty-estoque">/ ${estoque} em estoque</span>
+          </div>
+        </div>
+        <div class="produto-actions">
+          <button class="btn-comprar-individual" aria-label="Comprar este produto">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/>
+            </svg>
+            Comprar
+          </button>
+          <button class="btn-remove" aria-label="Remover produto">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/>
+            </svg>
+          </button>
+        </div>
+      </article>`;
+  }
+
+  function renderCarrinho() {
+    const carrinho = getCarrinho();
+    if (carrinho.length === 0) {
+      grid.innerHTML = '';
+      grid.style.display = 'none';
+      carrinhoVazio.style.display = 'flex';
+      document.querySelector('.carrinho-select-all').style.display = 'none';
+      document.querySelector('.carrinho-resumo').style.display = 'none';
+      updateCount();
+      return;
+    }
+
+    grid.style.display = 'grid';
+    carrinhoVazio.style.display = 'none';
+    document.querySelector('.carrinho-select-all').style.display = 'flex';
+    document.querySelector('.carrinho-resumo').style.display = 'block';
+
+    grid.innerHTML = carrinho.map(cardTemplate).join('');
+    document.querySelectorAll('.produto-card').forEach(initCard);
+
+    // Dispara o "reveal" manualmente (cards injetados após o observer já ter rodado)
+    grid.querySelectorAll('.reveal').forEach((el, i) => {
+      setTimeout(() => el.classList.add('visible'), i * 80);
+    });
+
+    updateCount();
+    updateSelectionUI();
+  }
+
+  /* ── 5. Persiste alterações de quantidade/remoção no sessionStorage ── */
+  function persistirQuantidade(produtoId, novaQtd) {
+    const carrinho = getCarrinho();
+    const idx = carrinho.findIndex(i => String(i.id) === String(produtoId));
+    if (idx >= 0) {
+      carrinho[idx].quantidade = novaQtd;
+      salvarCarrinho(carrinho);
+    }
+  }
+
+  function removerDoCarrinho(produtoId) {
+    const carrinho = getCarrinho().filter(i => String(i.id) !== String(produtoId));
+    salvarCarrinho(carrinho);
+  }
+
+  /* ── 6. Atualiza contagem de itens ───────────── */
   function updateCount() {
-    const cards  = document.querySelectorAll('.produto-card');
-    const badge  = document.getElementById('badgeCount');
-    const total  = document.getElementById('totalItens');
+    const cards = document.querySelectorAll('.produto-card');
+    const badge = document.getElementById('badgeCount');
+    const total = document.getElementById('totalItens');
     const n = cards.length;
     if (badge) badge.textContent = `${n} ${n === 1 ? 'item' : 'itens'}`;
     if (total) total.textContent = n;
   }
 
-  // ── Injeta a checkbox de seleção em um card ──
+  /* ── 7. Checkbox de seleção por card ─────────── */
   function injectCheckbox(card) {
-    if (card.querySelector('.produto-card-select')) return; // já existe
+    if (card.querySelector('.produto-card-select')) return;
 
     const wrap = document.createElement('div');
     wrap.className = 'produto-card-select';
@@ -41,11 +172,8 @@
       </label>`;
 
     const imgWrap = card.querySelector('.produto-img-wrap');
-    if (imgWrap) {
-      imgWrap.appendChild(wrap);
-    } else {
-      card.insertBefore(wrap, card.firstChild);
-    }
+    if (imgWrap) imgWrap.appendChild(wrap);
+    else card.insertBefore(wrap, card.firstChild);
 
     const checkbox = wrap.querySelector('input');
     checkbox.addEventListener('change', () => {
@@ -54,23 +182,19 @@
     });
   }
 
-  // ── Atualiza estado visual da seleção (botão + select-all) ──
   function updateSelectionUI() {
     const allChecks = Array.from(document.querySelectorAll('.card-select-checkbox'));
     const checked   = allChecks.filter(c => c.checked);
 
-    const btnSel   = document.getElementById('btnComprarSelecionados');
-    const countEl  = document.getElementById('countSelecionados');
+    const btnSel    = document.getElementById('btnComprarSelecionados');
+    const countEl   = document.getElementById('countSelecionados');
     const selectAll = document.getElementById('checkSelectAll');
 
     if (countEl) countEl.textContent = `(${checked.length})`;
     if (btnSel)  btnSel.disabled = checked.length === 0;
 
     if (selectAll) {
-      if (allChecks.length === 0) {
-        selectAll.checked = false;
-        selectAll.indeterminate = false;
-      } else if (checked.length === 0) {
+      if (allChecks.length === 0 || checked.length === 0) {
         selectAll.checked = false;
         selectAll.indeterminate = false;
       } else if (checked.length === allChecks.length) {
@@ -83,12 +207,10 @@
     }
   }
 
-  // ── Selecionar / desmarcar todos ─────────────
   const checkSelectAll = document.getElementById('checkSelectAll');
   if (checkSelectAll) {
     checkSelectAll.addEventListener('change', () => {
-      const allChecks = document.querySelectorAll('.card-select-checkbox');
-      allChecks.forEach(c => {
+      document.querySelectorAll('.card-select-checkbox').forEach(c => {
         c.checked = checkSelectAll.checked;
         const card = c.closest('.produto-card');
         if (card) card.classList.toggle('is-selected', c.checked);
@@ -97,25 +219,7 @@
     });
   }
 
-  // ── Comprar apenas os selecionados ───────────
-  const btnSelecionados = document.getElementById('btnComprarSelecionados');
-  if (btnSelecionados) {
-    btnSelecionados.addEventListener('click', () => {
-      const cards = Array.from(document.querySelectorAll('.produto-card'))
-        .filter(card => card.querySelector('.card-select-checkbox')?.checked);
-
-      if (cards.length === 0) {
-        showToast('Selecione ao menos um produto');
-        return;
-      }
-
-      // Aqui o backend receberá apenas os itens selecionados com suas quantidades
-      // Exemplo de payload: cards.map(c => ({ produto_id: c.dataset.produtoId, quantidade: c.querySelector('.qty-input').value }))
-      showToast(`✓ ${cards.length} ${cards.length === 1 ? 'item selecionado enviado' : 'itens selecionados enviados'} para o pedido`);
-    });
-  }
-
-  // ── Inicializa os controles de cada card ─────
+  /* ── 8. Inicializa controles de quantidade de um card ── */
   function initCard(card) {
     injectCheckbox(card);
 
@@ -123,13 +227,9 @@
     const input     = card.querySelector('.qty-input');
     const btnMinus  = card.querySelector('.qty-btn--minus');
     const btnPlus   = card.querySelector('.qty-btn--plus');
-    const estoqueEl = card.querySelector('.qty-estoque');
 
     if (!input) return;
-
-    // Define o máximo real pelo estoque
     input.max = estoque;
-    if (estoqueEl) estoqueEl.textContent = `/ ${estoque} em estoque`;
 
     function updateBtns() {
       const v = parseInt(input.value) || 1;
@@ -139,22 +239,21 @@
 
     function setQty(val) {
       let v = parseInt(val) || 1;
-      if (v < 1)       { v = 1; }
+      if (v < 1) v = 1;
       if (v > estoque) {
         v = estoque;
-        // shake no input ao tentar passar do limite
         input.classList.remove('shake');
-        void input.offsetWidth; // reflow para reiniciar animação
+        void input.offsetWidth;
         input.classList.add('shake');
         showToast(`Máximo disponível: ${estoque} unidade${estoque > 1 ? 's' : ''}`);
       }
       input.value = v;
       updateBtns();
+      persistirQuantidade(card.dataset.produtoId, v);
     }
 
     if (btnMinus) btnMinus.addEventListener('click', () => setQty(parseInt(input.value) - 1));
     if (btnPlus)  btnPlus.addEventListener('click',  () => setQty(parseInt(input.value) + 1));
-
     input.addEventListener('change', () => setQty(input.value));
     input.addEventListener('blur',   () => setQty(input.value));
     input.addEventListener('animationend', () => input.classList.remove('shake'));
@@ -162,41 +261,75 @@
     updateBtns();
   }
 
-  // ── Remover produto ──────────────────────────
+  /* ── 9. Remover produto ──────────────────────── */
   function removeCard(card) {
+    removerDoCarrinho(card.dataset.produtoId);
     card.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
     card.style.opacity    = '0';
     card.style.transform  = 'scale(0.92) translateY(-6px)';
-    setTimeout(() => { card.remove(); updateCount(); updateSelectionUI(); }, 310);
+    setTimeout(() => {
+      card.remove();
+      updateCount();
+      updateSelectionUI();
+      if (document.querySelectorAll('.produto-card').length === 0) renderCarrinho();
+    }, 310);
   }
 
-  // ── Comprar produto individual ───────────────
-  function comprarIndividual(card) {
-    const nome  = card.querySelector('.produto-nome')?.textContent || 'produto';
-    const qty   = card.querySelector('.qty-input')?.value || '1';
-    showToast(`✓ ${nome} (×${qty}) adicionado ao pedido`);
-    // Aqui o backend receberá: { produto_id, quantidade }
+  /* ── 10. Monta um item de pedido a partir de um card ── */
+  function cardParaItemPedido(card) {
+    return {
+      produto_id:     card.dataset.produtoId,
+      produto:        card.querySelector('.produto-nome')?.textContent || 'Produto',
+      categoria:      card.dataset.categoria || '',
+      valor_unitario: parseFloat(card.dataset.preco),
+      imagem_url:     card.querySelector('.produto-img-wrap img')?.getAttribute('src') || null,
+      quantidade:     parseInt(card.querySelector('.qty-input')?.value) || 1
+    };
   }
 
-  // ── Comprar tudo ─────────────────────────────
+  /* ── 11. Redireciona para a tela de pagamento ───────── */
+  function irParaPagamento(itens) {
+    if (itens.length === 0) {
+      showToast('Selecione ao menos um produto');
+      return;
+    }
+    sessionStorage.setItem('pedidoPendente', JSON.stringify({ itens, origem: 'carrinho' }));
+    window.location.href = 'telapagamento.html';
+  }
+
+  /* ── 12. Botões de compra ────────────────────── */
+  const btnSelecionados = document.getElementById('btnComprarSelecionados');
+  if (btnSelecionados) {
+    btnSelecionados.addEventListener('click', () => {
+      const itens = Array.from(document.querySelectorAll('.produto-card'))
+        .filter(card => card.querySelector('.card-select-checkbox')?.checked)
+        .map(cardParaItemPedido);
+      irParaPagamento(itens);
+    });
+  }
+
   const btnTudo = document.getElementById('btnComprarTudo');
   if (btnTudo) {
-    // Pulso de atenção ao carregar
     setTimeout(() => {
       btnTudo.classList.add('pulse');
       btnTudo.addEventListener('animationend', () => btnTudo.classList.remove('pulse'), { once: true });
     }, 800);
 
     btnTudo.addEventListener('click', () => {
-      const cards = document.querySelectorAll('.produto-card');
-      if (cards.length === 0) { showToast('Seu carrinho está vazio'); return; }
-      showToast(`✓ ${cards.length} ${cards.length === 1 ? 'item enviado' : 'itens enviados'} para o pedido`);
-      // Aqui o backend receberá todos os itens com suas quantidades
+      const itens = Array.from(document.querySelectorAll('.produto-card')).map(cardParaItemPedido);
+      irParaPagamento(itens);
     });
   }
 
-  // ── Delegação de eventos no grid ────────────
-  const grid = document.getElementById('lista-pedidos');
+  const btnFinalizar = document.getElementById('btnFinalizar');
+  if (btnFinalizar) {
+    btnFinalizar.addEventListener('click', () => {
+      const itens = Array.from(document.querySelectorAll('.produto-card')).map(cardParaItemPedido);
+      irParaPagamento(itens);
+    });
+  }
+
+  /* ── 13. Delegação de eventos no grid ────────── */
   if (grid) {
     grid.addEventListener('click', e => {
       const card = e.target.closest('.produto-card');
@@ -208,32 +341,13 @@
       }
 
       if (e.target.closest('.btn-comprar-individual')) {
-        comprarIndividual(card);
+        irParaPagamento([cardParaItemPedido(card)]);
         return;
       }
     });
   }
 
-  // ── Inicializa todos os cards existentes ─────
-  document.querySelectorAll('.produto-card').forEach(initCard);
-
-  // ── MutationObserver para cards adicionados via backend ──
-  if (grid) {
-    const observer = new MutationObserver(mutations => {
-      mutations.forEach(m => {
-        m.addedNodes.forEach(node => {
-          if (node.nodeType === 1 && node.classList.contains('produto-card')) {
-            initCard(node);
-            updateCount();
-            updateSelectionUI();
-          }
-        });
-      });
-    });
-    observer.observe(grid, { childList: true });
-  }
-
-  updateCount();
-  updateSelectionUI();
+  /* ── 14. Inicialização ───────────────────────── */
+  renderCarrinho();
 
 })();

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nexus Imports — Rastreio do Pedido</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Exo+2:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/nexus-shared.css">
+  <link rel="stylesheet" href="../css/telarastreio.css">
+</head>
+<body>
+
+<div class="nexus-bg" aria-hidden="true"></div>
+
+<div class="page-wrapper">
+
+  <header class="nexus-header">
+    <a href="telaprincipal.html" class="logo-home-link" aria-label="Voltar à página principal">
+      <div class="logo-icon"><img src="../img/nexus-logo.png" alt="Nexus Logo"></div>
+      <span class="logo-text">NEXUS IMPORTS</span>
+    </a>
+    <div class="header-actions">
+      <button class="btn-hamburger" id="btnHamburger" aria-label="Menu de navegação" aria-expanded="false">
+        <span class="hb-line"></span>
+        <span class="hb-line"></span>
+        <span class="hb-line"></span>
+      </button>
+      <div class="hamburger-dropdown" id="hamburgerDropdown" role="menu">
+        <a href="telaprodutos.html" class="hb-nav-link" role="menuitem">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+          Produtos
+        </a>
+        <a href="telacarrinho.html" class="hb-nav-link" role="menuitem">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>
+          Carrinho
+        </a>
+        <a href="telacompras.html" class="hb-nav-link" role="menuitem">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          Pedidos
+        </a>
+      </div>
+      <a href="telausuario.html" class="btn-avatar-header" aria-label="Meu perfil" title="Meu perfil">
+        <div class="avatar-header-fallback">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+          </svg>
+        </div>
+        <span class="avatar-header-ring" aria-hidden="true"></span>
+      </a>
+    </div>
+  </header>
+
+  <main class="rastreio-main">
+
+    <a href="telacompras.html" class="btn-voltar-pedidos reveal">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="15 18 9 12 15 6"/></svg>
+      Voltar para Meus Pedidos
+    </a>
+
+    <!-- Loader -->
+    <div class="rastreio-loader" id="rastreioLoader">
+      <div class="loader-ring"></div>
+      <span>Carregando rastreio…</span>
+    </div>
+
+    <!-- Erro -->
+    <div class="rastreio-erro" id="rastreioErro" style="display:none;">
+      <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3">
+        <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+      </svg>
+      <h2>Não foi possível carregar este pedido</h2>
+      <p id="rastreioErroMsg">Verifique se o pedido existe e tente novamente.</p>
+    </div>
+
+    <!-- Conteúdo -->
+    <div class="rastreio-conteudo" id="rastreioConteudo" style="display:none;">
+
+      <div class="rastreio-hero reveal">
+        <h1 class="page-title">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="vertical-align:middle;margin-right:10px">
+            <rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+            <circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>
+          </svg>
+          Rastreio do Pedido <span id="rastreioPedidoId">#0000</span>
+        </h1>
+        <p class="rastreio-produto" id="rastreioProduto">—</p>
+      </div>
+
+      <!-- Linha do tempo -->
+      <div class="rastreio-stepper reveal reveal-delay-1" id="rastreioStepper">
+        <div class="step" data-step="AGUARDANDO">
+          <div class="step-dot"></div>
+          <span class="step-label">Aguardando<br>Pagamento</span>
+        </div>
+        <div class="step-line"></div>
+        <div class="step" data-step="PREPARANDO">
+          <div class="step-dot"></div>
+          <span class="step-label">Em<br>Separação</span>
+        </div>
+        <div class="step-line"></div>
+        <div class="step" data-step="ENVIADO">
+          <div class="step-dot"></div>
+          <span class="step-label">Em<br>Trânsito</span>
+        </div>
+        <div class="step-line"></div>
+        <div class="step" data-step="ENTREGUE">
+          <div class="step-dot"></div>
+          <span class="step-label">Entregue</span>
+        </div>
+      </div>
+
+      <!-- Info rápida -->
+      <div class="rastreio-info-row reveal reveal-delay-2">
+        <div class="info-pill">
+          <span class="field-label">Origem</span>
+          <span class="field-value" id="infoOrigem">—</span>
+        </div>
+        <div class="info-pill">
+          <span class="field-label">Destino</span>
+          <span class="field-value" id="infoDestino">—</span>
+        </div>
+        <div class="info-pill">
+          <span class="field-label">Previsão de entrega</span>
+          <span class="field-value" id="infoEta">—</span>
+        </div>
+      </div>
+
+      <!-- Mapa -->
+      <div class="mapa-wrap reveal reveal-delay-3">
+        <div id="mapaRastreio" class="mapa-rastreio"></div>
+
+        <!-- Placeholder exibido quando a chave do Google Maps não está configurada -->
+        <div class="mapa-config-aviso" id="mapaConfigAviso" style="display:none;">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 1 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+          </svg>
+          <h3>Mapa do Google ainda não configurado</h3>
+          <p>
+            Para exibir o trajeto real no mapa, adicione sua chave de API do Google Maps
+            em <code>frontend/js/nexus-config.js</code> (variável <code>NEXUS_GOOGLE_MAPS_KEY</code>).
+            É necessário ativar as APIs <strong>Maps JavaScript API</strong> e <strong>Geocoding API</strong>
+            no Google Cloud Console.
+          </p>
+        </div>
+
+        <!-- Aviso quando o endereço de entrega não pôde ser localizado -->
+        <div class="mapa-config-aviso" id="mapaGeocodeAviso" style="display:none;">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
+            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          <h3>Não foi possível localizar o endereço de entrega</h3>
+          <p id="mapaGeocodeMsg">Verifique se o endereço cadastrado no perfil está completo (rua, número, cidade e estado).</p>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+</div>
+
+<script src="../js/nexus-config.js"></script>
+<script src="../js/nexus-shared.js"></script>
+<script src="../js/telarastreio.js"></script>
+</body>
+</html>

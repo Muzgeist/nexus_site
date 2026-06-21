@@ -438,3 +438,144 @@
   .modal-box { padding: 32px 24px 28px; }
   .modal-actions { flex-direction: column; }
 }
+
+/* ── Status adicionais (Aguardando / Cancelado) ──────── */
+.compra-status--aguardando {
+  color: var(--text-muted);
+  background: rgba(255,255,255,0.04);
+  border-color: rgba(255,255,255,0.16);
+}
+
+.compra-status--cancelado {
+  color: rgba(255, 85, 100, 0.85);
+  background: rgba(255, 45, 85, 0.08);
+  border-color: rgba(255, 45, 85, 0.28);
+}
+
+.compra-accent--aguardando { background: linear-gradient(180deg, rgba(255,255,255,0.25), rgba(255,255,255,0.05)); }
+.compra-accent--cancelado  { background: linear-gradient(180deg, var(--error), rgba(255,45,85,0.2)); }
+
+/* ── Badge da forma de pagamento ─────────────────────── */
+.pagamento-badge {
+  font-family: var(--font-body);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  padding: 4px 12px;
+  white-space: nowrap;
+}
+
+/* ── Ações do topo do card (rastrear + cancelar) ─────── */
+.compra-top-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  flex-wrap: wrap;
+}
+
+.compra-top-actions .btn-cancelar-compra { margin-left: 0; }
+
+.btn-rastrear-compra {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-display);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--purple-200);
+  background: rgba(124,0,224,0.1);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 6px 13px;
+  cursor: pointer;
+  transition: var(--transition-fast);
+  white-space: nowrap;
+  flex-shrink: 0;
+  text-decoration: none;
+}
+
+.btn-rastrear-compra:hover:not(.is-disabled) {
+  border-color: var(--border-active);
+  background: var(--pink-soft);
+  color: var(--text-primary);
+  box-shadow: 0 0 14px var(--pink-glow);
+}
+
+.btn-rastrear-compra.is-disabled {
+  opacity: 0.28;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* ── Loader ──────────────────────────────────────────── */
+.compras-loader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 90px 24px;
+  color: var(--text-muted);
+}
+.compras-loader .loader-ring {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  border: 3px solid rgba(255,255,255,0.15);
+  border-top-color: var(--pink-neon);
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Estado vazio ────────────────────────────────────── */
+.compras-vazio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 14px;
+  padding: 80px 24px;
+  color: var(--text-muted);
+}
+.compras-vazio svg { opacity: 0.35; margin-bottom: 6px; }
+.compras-vazio h2 {
+  font-family: var(--font-display);
+  font-size: 18px;
+  color: var(--text-primary);
+  letter-spacing: 0.04em;
+}
+.compras-vazio p { font-size: 14px; max-width: 360px; }
+
+/* ── Toast (mesmo padrão das demais telas) ───────────── */
+.toast {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  z-index: 999;
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  background: rgba(30, 0, 55, 0.95);
+  border: 1px solid rgba(187,134,252,0.35);
+  border-radius: var(--radius-full);
+  padding: 12px 28px;
+  backdrop-filter: blur(16px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.6), 0 0 24px var(--violet-glow);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.35s cubic-bezier(0.16,1,0.3,1);
+  white-space: nowrap;
+}
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
