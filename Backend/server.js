@@ -125,18 +125,36 @@ app.post('/login', async (req, res) => {
 app.put('/usuario/:id', async (req, res) => {
     try {
         const { id } = req.params;
-        const { nome, telefone, endereco } = req.body;
+        const { nome, email, telefone, endereco } = req.body;
 
         if (!nome) {
             return res.status(400).json({ erro: 'Nome é obrigatório' });
         }
 
+        if (email) {
+            const emailEmUso = await executarQuery(
+                'SELECT id FROM usuario WHERE email = ? AND id != ?',
+                [email, id]
+            );
+            if (emailEmUso.length > 0) {
+                return res.status(409).json({ erro: 'Este e-mail já está em uso por outra conta' });
+            }
+        }
+
         await executarQuery(
-            'UPDATE usuario SET nome = ?, telefone = ?, endereco = ? WHERE id = ?',
-            [nome, telefone || null, endereco || null, id]
+            'UPDATE usuario SET nome = ?, email = COALESCE(?, email), telefone = ?, endereco = ? WHERE id = ?',
+            [nome, email || null, telefone || null, endereco || null, id]
         );
 
-        res.json({ mensagem: 'Perfil atualizado com sucesso!' });
+        const atualizado = await executarQuery(
+            'SELECT id, nome, email, telefone, endereco, cpf_cnpj FROM usuario WHERE id = ?',
+            [id]
+        );
+
+        res.json({
+            mensagem: 'Perfil atualizado com sucesso!',
+            usuario: atualizado[0]
+        });
 
     } catch (erro) {
         console.error('Erro ao atualizar perfil:', erro);
@@ -170,6 +188,42 @@ app.get('/produtos', async (req, res) => {
 
     } catch (erro) {
         console.error('Erro ao buscar produtos:', erro);
+        res.status(500).json({ erro: 'Erro interno no servidor' });
+    }
+});
+
+// ── Categorias disponíveis (usado no filtro de telaprodutos) ──
+app.get('/categorias', async (req, res) => {
+    try {
+        const resultado = await executarQuery(
+            'SELECT DISTINCT categoria FROM produtos WHERE ativo = 1 ORDER BY categoria'
+        );
+        res.json(resultado.map(linha => linha.categoria));
+
+    } catch (erro) {
+        console.error('Erro ao buscar categorias:', erro);
+        res.status(500).json({ erro: 'Erro interno no servidor' });
+    }
+});
+
+// ── Detalhe de um produto (usado em telaproduto.html) ──
+app.get('/produto/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const resultado = await executarQuery(
+            'SELECT * FROM vw_estoque_resumo WHERE id = ?',
+            [id]
+        );
+
+        if (resultado.length === 0) {
+            return res.status(404).json({ erro: 'Produto não encontrado' });
+        }
+
+        res.json(resultado[0]);
+
+    } catch (erro) {
+        console.error('Erro ao buscar produto:', erro);
         res.status(500).json({ erro: 'Erro interno no servidor' });
     }
 });
