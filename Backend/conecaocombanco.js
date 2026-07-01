@@ -5,7 +5,7 @@ async function conectar() {
         host: 'localhost',
         port: 3306,
         user: 'root',
-        password: process.env.DB_PASS,       // coloque sua senha aqui se tiver
+        password: process.env.DB_PASS,       // Senha está no grupo pv 
         database: 'Banco'
     });
 }
