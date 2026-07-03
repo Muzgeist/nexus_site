@@ -119,6 +119,10 @@
   border-bottom: 1px solid var(--border-subtle);
   padding: 14px 32px;
 }
+body.theme-light .filter-bar-section {
+  background: rgba(255, 253, 247, 0.92);
+  border-bottom-color: rgba(184, 134, 11, 0.22);
+}
 .filter-bar-inner {
   max-width: 1200px; margin: 0 auto;
   display: flex; align-items: center; gap: 16px;
