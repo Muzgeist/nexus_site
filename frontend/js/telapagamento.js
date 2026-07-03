@@ -113,7 +113,6 @@
   }
 
   const sucessoOverlay   = document.getElementById('sucessoOverlay');
-  const sucessoCountdown = document.getElementById('sucessoCountdown');
 
   function mostrarSucesso() {
     limparCarrinhoComprado();
@@ -121,17 +120,6 @@
 
     sucessoOverlay.classList.add('show');
     sucessoOverlay.removeAttribute('aria-hidden');
-
-    let n = 3;
-    sucessoCountdown.textContent = n;
-    const intervalo = setInterval(() => {
-      n -= 1;
-      sucessoCountdown.textContent = n;
-      if (n <= 0) {
-        clearInterval(intervalo);
-        window.location.href = 'telacompras.html';
-      }
-    }, 1000);
   }
 
   /* ════════════════════════════════════════════

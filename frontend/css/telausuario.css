@@ -280,7 +280,7 @@
 
 .campo-input {
   width: 100%;
-  background: rgba(15, 0, 28, 0.8);
+  background: var(--bg-card);
   border: 1.5px solid var(--purple-500);
   border-radius: var(--radius-md);
   padding: 11px 14px;

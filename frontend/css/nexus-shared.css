@@ -202,6 +202,7 @@ body {
 
 /* ── Buttons ────────────────────────────────── */
 .btn-nexus {
+  display: inline-block;
   font-family: var(--font-display);
   font-size: 13px;
   font-weight: 700;
