@@ -1,4 +1,4 @@
--- Active: 1770140834426@@127.0.0.1@3306@banco
+-- Active: 1779825838040@@127.0.0.1@3306@banco
 -- ============================================================
 -- NEXUS IMPORTS — SCRIPT COMPLETO E TESTADO
 -- Junta Banco.sql + migracao_pagamento_rastreio.sql em um único
