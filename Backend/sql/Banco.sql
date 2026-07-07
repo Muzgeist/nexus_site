@@ -1,14 +1,4 @@
 -- Active: 1770140834426@@127.0.0.1@3306@banco
--- ============================================================
--- NEXUS IMPORTS — SCRIPT COMPLETO E TESTADO
--- Junta Banco.sql + migracao_pagamento_rastreio.sql em um único
--- arquivo, na ordem certa, para deixar o banco compatível com
--- o restante do código (server.js).
--- ATENÇÃO: este script roda 'DROP DATABASE IF EXISTS Banco;' —
--- ele recria o banco do zero. Use apenas em instalação nova.
--- ============================================================
-
--- Active: 1770140830677@@127.0.0.1@3306@banco
 DROP DATABASE IF EXISTS Banco;
 CREATE DATABASE IF NOT EXISTS Banco;
 USE Banco;
@@ -179,8 +169,8 @@ INSERT INTO produtos (produto, descricao, imagem_url, categoria, marca, quantida
 ('Corsair HS80 RGB Wireless', 'Headset gamer sem fio Corsair HS80 RGB, driver 50mm neodímio, Dolby Atmos, microfone omnidirecional, bateria 20h', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQOJLVdDBcBlRwPkHAL8RQQUmXor2y_VLPX6mMYTVJlbA&s=10', 'Headsets', 'Corsair', 16, 749.90, 540.00),
 ('JBL Quantum 600 Wireless', 'Headset gamer sem fio JBL Quantum 600, JBL QuantumSURROUND, driver 50mm, microfone flip-up, bateria 14h', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR3jnE0wcS9LGIxZkVgu_peQCZqG_MaRJcW6SUycGrYIA&s=10', 'Headsets', 'JBL', 20, 649.90, 470.00),
 ('TP-Link Archer AX73 WiFi 6 Router', 'Roteador TP-Link Archer AX73 WiFi 6, AX5400, dual band, 6 antenas, OFDMA, MU-MIMO, porta WAN/LAN Gigabit', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRjv5CKQagibPVwbLTEXY-wNKnUc4PMUX93eRvw5FYSiQ&s=10', 'Redes', 'TP-Link', 30, 699.90, 490.00),
-('D-Link DIR-X3260 WiFi 6 AX3200', 'Roteador D-Link DIR-X3260 WiFi 6 AX3200, dual band, mesh compatível, 4 antenas, beamforming, QoS', 'https://images.unsplash.com/photo-1606904825846-647eb07f5be2?w=400&q=80', 'Redes', 'D-Link', 25, 599.90, 420.00),
-('Mercusys MR70X WiFi 6 AX1800', 'Roteador Mercusys MR70X WiFi 6 AX1800, dual band, 4 antenas, OFDMA, excelente custo-benefício', 'https://images.unsplash.com/photo-1606904825846-647eb07f5be2?w=400&q=80', 'Redes', 'Mercusys', 35, 299.90, 200.00),
+('D-Link DIR-X3260 WiFi 6 AX3200', 'Roteador D-Link DIR-X3260 WiFi 6 AX3200, dual band, mesh compatível, 4 antenas, beamforming, QoS', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQbdsP8WeSXx0l1MQ1rZQHn_cCGE8CFSCb-X9Z081J-4Q&s=10', 'Redes', 'D-Link', 25, 599.90, 420.00),
+('Mercusys MR70X WiFi 6 AX1800', 'Roteador Mercusys MR70X WiFi 6 AX1800, dual band, 4 antenas, OFDMA, excelente custo-benefício', 'https://images1.kabum.com.br/produtos/fotos/sync_mirakl/201961/medium/Roteador-Mercusys-Wi-Fi-6-Dual-Band-1800mbps-Ofdma-Mu-Mimo-WPA3-BSS-IPV6-VPN-MR70X_1774379330.jpg', 'Redes', 'Mercusys', 35, 299.90, 200.00),
 ('MikroTik RB4011 Router', 'Roteador MikroTik RB4011iGS+RM, 10 portas Gigabit, 1x SFP+, RouterOS L5, para redes profissionais', 'https://http2.mlstatic.com/D_NQ_NP_751603-MLA99442322408_112025-O.webp', 'Redes', 'MikroTik', 10, 1599.90, 1200.00),
 ('Ubiquiti UniFi Dream Machine SE', 'Gateway Ubiquiti UniFi Dream Machine SE, 8 portas PoE Gigabit, 1 porta 10G SFP+, IPS/IDS, console UniFi integrado', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6tFa1r-jKMBNZx2gS68TjY4wCKI9bEou921Vt9VdNjw&s=10', 'Redes', 'Ubiquiti', 6, 3999.90, 3000.00),
 ('Hub USB-C 7 em 1 - HDMI 4K + USB 3.0 + SD', 'Hub USB-C 7 em 1 com saída HDMI 4K@60Hz, 3x USB 3.0, leitor SD/microSD, USB-C Power Delivery 100W, alumínio', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTW9QNxgk2ZjoP7SqjU-keuxd7a4DOXxwI6C9ecMrEtAA&s=10', 'Acessórios', 'Universal', 50, 149.90, 90.00),
@@ -201,7 +191,13 @@ INSERT INTO produtos (produto, descricao, imagem_url, categoria, marca, quantida
 ('Ubiquiti UniFi AP WiFi 6 Pro', 'Access Point Ubiquiti UniFi U6 Pro WiFi 6, cobertura 300m², até 300 clientes simultâneos, 4x4 MU-MIMO, PoE', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQCEmdgknHmpcblXoCUzH4ppXH1IPw1dvRzbqadCrgahg&s=10', 'Corporativo', 'Ubiquiti', 8, 2299.90, 1700.00),
 ('Nobreak APC Smart-UPS 1500VA', 'Nobreak APC Smart-UPS 1500VA Senoidal, 1000W, 8 tomadas, USB + serial, gerenciamento PowerChute, para servidores', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQFl-mU67yqfaXFQi-2t7XvzX4J_nDt0kniLNyaOjHBpQ&s=10', 'Corporativo', 'APC', 10, 4299.90, 3200.00),
 ('Monitor Dell UltraSharp 27" 4K USB-C', 'Monitor Dell UltraSharp U2723DE 27", IPS 4K UHD, USB-C 90W, Hub USB, cor 100% sRGB / 98% DCI-P3, certificação Thunderbolt', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR09xEXGl-emozKc4VoUmimmz939qljs7_W_e12QwQR0A&s=10', 'Corporativo', 'Dell', 8, 5999.90, 4600.00),
-('Lenovo ThinkVision T27h 27" QHD', 'Monitor Lenovo ThinkVision T27h 27" QHD IPS, resolução 2560x1440, USB-C 65W, hub USB 3.0, ajuste ergonômico completo', 'https://p3-ofp.static.pub/fes/cms/2022/11/11/lqqit0s07rv41ybwklq5rgr27t7x2q472682.png', 'Corporativo', 'Lenovo', 6, 3999.90, 3000.00);
+('Lenovo ThinkVision T27h 27" QHD', 'Monitor Lenovo ThinkVision T27h 27" QHD IPS, resolução 2560x1440, USB-C 65W, hub USB 3.0, ajuste ergonômico completo', 'https://p3-ofp.static.pub/fes/cms/2022/11/11/lqqit0s07rv41ybwklq5rgr27t7x2q472682.png', 'Corporativo', 'Lenovo', 6, 3999.90, 3000.00),
+('Kingston A400 240GB', 'SSD Kingston A400 240GB, interface SATA III 6Gb/s, leitura até 500MB/s, gravação até 350MB/s, formato 2.5 polegadas', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ6odqM-UCtZKFq20HTl42tmrLvU9Vruz8V3WmmXDNDSg&s=10', 'SSD SATA', 'Kingston', 40, 189.90, 140.00),
+('Kingston A400 480GB', 'SSD Kingston A400 480GB, interface SATA III 6Gb/s, leitura até 500MB/s, gravação até 450MB/s, formato 2.5 polegadas', 'https://media.kingston.com/kingston/product/ktc-product-ssd-a400-sa400s37-480gb-3-zm-lg.jpg', 'SSD SATA', 'Kingston', 35, 289.90, 220.00),
+('Crucial BX500 500GB', 'SSD Crucial BX500 500GB, interface SATA III 6Gb/s, leitura até 540MB/s, gravação até 500MB/s, formato 2.5 polegadas', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRnLZEXsWWB3XBYIETcJyVJmJRFhcoKy9gIFa55X2WS6Q&s=10', 'SSD SATA', 'Crucial', 28, 319.90, 245.00),
+('WD Green 480GB', 'SSD WD Green 480GB, interface SATA III 6Gb/s, leitura até 545MB/s, formato 2.5 polegadas, baixo consumo de energia', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRV0_aSJt6JHxDapzoqI7qZSrtExYh1CWRJokmrdnmpKg&s=10', 'SSD SATA', 'Western Digital', 30, 299.90, 225.00),
+('SanDisk SSD Plus 480GB', 'SSD SanDisk Plus 480GB, interface SATA III 6Gb/s, leitura até 535MB/s, gravação até 445MB/s, formato 2.5 polegadas', 'https://images4.kabum.com.br/produtos/fotos/sync_mirakl/256184/xlarge/SSD-Sandisk-Plus-480GB-SATA-Leitura-535MB-Grava-o-445MB_1759163085.jpg', 'SSD SATA', 'SanDisk', 22, 309.90, 235.00),
+('Samsung 870 EVO 500GB', 'SSD Samsung 870 EVO 500GB, interface SATA III 6Gb/s, leitura até 560MB/s, gravação até 530MB/s, formato 2.5 polegadas', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9ZfrxtQ198TAXpOn-gqgzk4VTYpYrJuIq12eMObPYAw&s=10', 'SSD SATA', 'Samsung', 20, 429.90, 340.00);
 
 -- ATUALIZA VIEW PARA INCLUIR NOVOS CAMPOS
 -- ============================================================

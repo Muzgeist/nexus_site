@@ -60,20 +60,65 @@
   if (avatarWrap && fotoInput) {
     avatarWrap.addEventListener('click', () => fotoInput.click());
 
+    // Redimensiona/comprime a imagem antes de persistir: uma foto de
+    // câmera/celular sem compressão (vários MB em base64) estourava a cota
+    // do sessionStorage e o setItem falhava silenciosamente — a foto parecia
+    // mudar na hora, mas sumia ao recarregar ou trocar de tela.
+    function comprimirImagem(file, maxLado = 480, qualidade = 0.85) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = e => {
+          const img = new Image();
+          img.onload = () => {
+            let { width, height } = img;
+            if (width > height && width > maxLado) {
+              height = Math.round(height * (maxLado / width));
+              width = maxLado;
+            } else if (height > maxLado) {
+              width = Math.round(width * (maxLado / height));
+              height = maxLado;
+            }
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+            canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+            resolve(canvas.toDataURL('image/jpeg', qualidade));
+          };
+          img.onerror = reject;
+          img.src = e.target.result;
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
     fotoInput.addEventListener('change', () => {
       const file = fotoInput.files[0];
       if (!file) return;
-      const reader = new FileReader();
-      reader.onload = e => {
-        fotoPerfil.src = e.target.result;
+
+      const overlay = avatarWrap.querySelector('.avatar-camera-overlay');
+
+      comprimirImagem(file).then(dataUrl => {
+        fotoPerfil.src = dataUrl;
         fotoPerfil.style.display = 'block';
         if (avatarFB) avatarFB.style.display = 'none';
         // Persiste a foto localmente (sessão) para ser lida por
         // telaprincipal e demais telas. Upload para o servidor não
         // está implementado nesta versão.
-        try { sessionStorage.setItem('fotoPerfil', e.target.result); } catch (_) {}
+        try {
+          sessionStorage.setItem('fotoPerfil', dataUrl);
+        } catch (err) {
+          if (overlay) {
+            overlay.style.opacity = '1';
+            overlay.querySelector('span').textContent = 'Foto muito grande, tente outra';
+            setTimeout(() => {
+              overlay.style.opacity = '';
+              overlay.querySelector('span').textContent = 'Alterar foto';
+            }, 2200);
+          }
+          return;
+        }
 
-        const overlay = avatarWrap.querySelector('.avatar-camera-overlay');
         if (overlay) {
           overlay.style.opacity = '1';
           overlay.querySelector('span').textContent = 'Foto atualizada!';
@@ -82,8 +127,7 @@
             overlay.querySelector('span').textContent = 'Alterar foto';
           }, 1800);
         }
-      };
-      reader.readAsDataURL(file);
+      }).catch(() => {});
     });
   }
 
