@@ -1,4 +1,4 @@
--- Active: 1779825838040@@127.0.0.1@3306@banco
+-- Active: 1770140833806@@127.0.0.1@3306@banco
 -- ============================================================
 -- NEXUS IMPORTS — Migração: Pagamentos (Pix/Cartão/Boleto) + Rastreio
 -- Execute este script depois do Banco.sql original, no mesmo banco.
