@@ -426,3 +426,117 @@
   .estoque-dot { animation: none !important; }
   .avatar-header-ring { animation: none !important; }
 }
+
+/* ============================================
+   COMPARATIVO DE PREÇOS
+   ============================================ */
+.comparativo-section {
+  grid-column: 1 / -1;
+  width: 100vw;
+  margin: 48px calc(50% - 50vw) 0;
+  padding: 36px max(32px, calc((100vw - 1100px) / 2 + 32px)) 32px;
+  background: var(--bg-card);
+  border-top: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
+  border-radius: 0;
+  box-shadow: none;
+  position: relative; z-index: 1;
+}
+.comparativo-header {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  flex-wrap: wrap; gap: 16px; margin: 0 auto 20px;
+  max-width: 1400px;
+}
+.comparativo-title {
+  font-family: var(--font-display); font-size: 16px; font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-primary);
+  margin: 0 0 4px;
+}
+.comparativo-subtitle {
+  font-family: var(--font-body); font-size: 12.5px; color: var(--text-muted); margin: 0;
+}
+.comparativo-filtros { display: flex; gap: 8px; }
+.filtro-btn {
+  font-family: var(--font-body); font-size: 11.5px; font-weight: 600;
+  letter-spacing: 0.04em; text-transform: uppercase;
+  color: var(--text-muted); background: transparent;
+  border: 1px solid var(--border-subtle); border-radius: var(--radius-full);
+  padding: 7px 14px; cursor: pointer; transition: all var(--transition-fast);
+}
+.filtro-btn:hover { color: var(--text-primary); border-color: var(--border-active); }
+.filtro-btn.is-active {
+  color: var(--bg-deep); background: var(--pink-neon);
+  border-color: var(--pink-neon); box-shadow: 0 0 12px var(--pink-glow);
+}
+
+.comparativo-lista { display: flex; flex-direction: column; gap: 10px; max-width: 1400px; margin-left: auto; margin-right: auto; }
+
+.comp-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto auto auto;
+  align-items: center; gap: 16px;
+  padding: 14px 16px;
+  background: var(--bg-card-light);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  transition: border-color var(--transition-fast), transform var(--transition-fast);
+}
+.comp-row:hover { border-color: var(--border-active); transform: translateY(-1px); }
+.comp-row.is-nexus {
+  border-color: var(--pink-neon);
+  box-shadow: 0 0 0 1px var(--pink-glow), 0 0 24px rgba(224,64,251,0.12);
+}
+
+.comp-loja { display: flex; align-items: center; gap: 10px; min-width: 140px; }
+.comp-loja-dot {
+  width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0;
+  background: var(--comp-cor, var(--purple-400));
+  box-shadow: 0 0 8px var(--comp-cor, var(--purple-400));
+}
+.comp-loja-nome {
+  font-family: var(--font-body); font-size: 13.5px; font-weight: 700; color: var(--text-primary);
+}
+.comp-tag-nexus {
+  font-family: var(--font-display); font-size: 9px; font-weight: 700;
+  letter-spacing: 0.05em; text-transform: uppercase;
+  color: var(--bg-deep); background: var(--pink-neon);
+  padding: 2px 7px; border-radius: var(--radius-full);
+}
+
+.comp-frete {
+  font-family: var(--font-body); font-size: 11.5px; color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.comp-prazo {
+  font-family: var(--font-body); font-size: 11.5px; color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.comp-preco-wrap { text-align: right; min-width: 100px; }
+.comp-preco { font-family: var(--font-display); font-size: 15px; font-weight: 700; color: var(--text-primary); }
+.comp-preco.is-menor { color: var(--pink-bright); }
+.comp-diff {
+  display: block; font-family: var(--font-body); font-size: 10.5px; margin-top: 2px;
+}
+.comp-diff.mais-caro { color: var(--error); }
+.comp-diff.mais-barato { color: var(--success); }
+
+.comp-badge-melhor {
+  font-family: var(--font-display); font-size: 9px; font-weight: 700;
+  letter-spacing: 0.05em; text-transform: uppercase;
+  color: var(--bg-deep); background: var(--text-primary);
+  padding: 3px 8px; border-radius: var(--radius-full); white-space: nowrap;
+}
+
+.comparativo-aviso {
+  font-family: var(--font-body); font-size: 10.5px; color: var(--text-muted);
+  opacity: 0.75; margin: 16px auto 0; line-height: 1.5;
+  max-width: 1400px;
+}
+
+@media (max-width: 640px) {
+  .comp-row { grid-template-columns: 1fr auto; row-gap: 8px; }
+  .comp-frete, .comp-prazo { display: none; }
+  .comparativo-section { margin-top: 32px; padding: 20px 16px 32px; }
+}

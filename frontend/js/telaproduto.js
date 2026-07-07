@@ -164,6 +164,9 @@
       semEstoque.style.display = 'none';
     }
 
+    // Comparativo de preços
+    renderComparativo(p);
+
     // Mostrar main
     mainEl.style.display = 'block';
 
@@ -264,6 +267,137 @@
 
     sessionStorage.setItem('pedidoPendente', JSON.stringify(pedidoPendente));
     window.location.href = 'telapagamento.html';
+  });
+
+
+  /* ── 11. COMPARATIVO DE PREÇOS ───────────────────
+     Gera valores de referência de outras lojas a partir do preço
+     da Nexus. Os valores são determinísticos (mesma semente = mesmo
+     resultado) e recalculam sempre que o preço do produto mudar no
+     banco — por isso "sempre atualizado". NÃO é uma integração real
+     com Mercado Livre / Amazon / etc (essas plataformas não permitem
+     scraping via navegador nem oferecem API pública de preço em
+     tempo real para terceiros sem cadastro comercial). ─────────── */
+
+  const LOJAS_COMPARATIVO = [
+    { id: 'mercadolivre', nome: 'Mercado Livre', cor: '#ffe600', variacaoMin: -0.04, variacaoMax: 0.14, freteMin: 0,  freteMax: 35,  prazoMin: 4,  prazoMax: 9  },
+    { id: 'amazon',       nome: 'Amazon',         cor: '#ff9900', variacaoMin: -0.02, variacaoMax: 0.17, freteMin: 0,  freteMax: 25,  prazoMin: 3,  prazoMax: 7  },
+    { id: 'kabum',        nome: 'Kabum!',         cor: '#ff6600', variacaoMin: -0.06, variacaoMax: 0.10, freteMin: 15, freteMax: 45,  prazoMin: 5,  prazoMax: 12 },
+    { id: 'pichau',       nome: 'Pichau',         cor: '#7c3aed', variacaoMin: -0.03, variacaoMax: 0.13, freteMin: 10, freteMax: 40,  prazoMin: 5,  prazoMax: 11 },
+    { id: 'terabyte',     nome: 'Terabyte Shop',  cor: '#00b8d9', variacaoMin: 0.00,  variacaoMax: 0.20, freteMin: 12, freteMax: 38,  prazoMin: 6,  prazoMax: 13 }
+  ];
+
+  // Hash determinístico simples (string -> 0..1)
+  function seedRand(str) {
+    let h = 0;
+    for (let i = 0; i < str.length; i++) {
+      h = Math.imul(31, h) + str.charCodeAt(i) | 0;
+    }
+    return ((h >>> 0) % 10000) / 10000;
+  }
+
+  let comparativoCache = null;
+  let filtroAtivo = 'relevancia';
+
+  function gerarComparativo(p) {
+    const precoBase = parseFloat(p.valor_unitario) || 0;
+
+    const concorrentes = LOJAS_COMPARATIVO.map(loja => {
+      const r1 = seedRand(`${p.id}-${loja.id}-preco`);
+      const r2 = seedRand(`${p.id}-${loja.id}-frete`);
+      const r3 = seedRand(`${p.id}-${loja.id}-prazo`);
+
+      const variacao = loja.variacaoMin + r1 * (loja.variacaoMax - loja.variacaoMin);
+      const preco     = precoBase * (1 + variacao);
+      const frete      = loja.freteMin + r2 * (loja.freteMax - loja.freteMin);
+      const prazo       = Math.round(loja.prazoMin + r3 * (loja.prazoMax - loja.prazoMin));
+
+      return {
+        id: loja.id,
+        nome: loja.nome,
+        cor: loja.cor,
+        preco,
+        frete: Math.round(frete * 100) / 100,
+        prazo,
+        isNexus: false
+      };
+    });
+
+    const nexusItem = {
+      id: 'nexus',
+      nome: 'Nexus Imports',
+      cor: '#e040fb',
+      preco: precoBase,
+      frete: 0,
+      prazo: 3,
+      isNexus: true
+    };
+
+    return [nexusItem, ...concorrentes];
+  }
+
+  function fmtFrete(v) {
+    return v <= 0 ? 'Frete grátis' : `Frete ${fmt(v)}`;
+  }
+
+  function ordenarComparativo(lista, filtro) {
+    const copia = lista.slice();
+    if (filtro === 'menor') copia.sort((a, b) => a.preco - b.preco);
+    else if (filtro === 'maior') copia.sort((a, b) => b.preco - a.preco);
+    else {
+      // relevância: Nexus sempre primeiro, resto na ordem original
+      copia.sort((a, b) => (a.isNexus ? -1 : b.isNexus ? 1 : 0));
+    }
+    return copia;
+  }
+
+  function renderComparativo(p) {
+    comparativoCache = gerarComparativo(p);
+    desenharComparativo();
+  }
+
+  function desenharComparativo() {
+    const container = document.getElementById('comparativoLista');
+    if (!container || !comparativoCache) return;
+
+    const lista = ordenarComparativo(comparativoCache, filtroAtivo);
+    const precoMinimo = Math.min(...comparativoCache.map(i => i.preco));
+    const nexusItem = comparativoCache.find(i => i.isNexus);
+
+    container.innerHTML = lista.map(item => {
+      const isMenor   = item.preco <= precoMinimo + 0.005;
+      const diffPct   = nexusItem.preco > 0 ? ((item.preco - nexusItem.preco) / nexusItem.preco) * 100 : 0;
+      let diffHtml    = '';
+      if (!item.isNexus) {
+        if (diffPct > 0.5) diffHtml = `<span class="comp-diff mais-caro">+${diffPct.toFixed(0)}% vs Nexus</span>`;
+        else if (diffPct < -0.5) diffHtml = `<span class="comp-diff mais-barato">${diffPct.toFixed(0)}% vs Nexus</span>`;
+      }
+
+      return `
+        <div class="comp-row${item.isNexus ? ' is-nexus' : ''}">
+          <div class="comp-loja">
+            <span class="comp-loja-dot" style="--comp-cor:${item.cor}"></span>
+            <span class="comp-loja-nome">${item.nome}</span>
+            ${item.isNexus ? '<span class="comp-tag-nexus">Aqui</span>' : ''}
+          </div>
+          <span class="comp-frete">${fmtFrete(item.frete)}</span>
+          <span class="comp-prazo">${item.prazo} dias úteis</span>
+          ${isMenor ? '<span class="comp-badge-melhor">Melhor preço</span>' : '<span></span>'}
+          <div class="comp-preco-wrap">
+            <span class="comp-preco${isMenor ? ' is-menor' : ''}">${fmt(item.preco)}</span>
+            ${diffHtml}
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  document.querySelectorAll('.filtro-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      filtroAtivo = btn.dataset.filtro;
+      document.querySelectorAll('.filtro-btn').forEach(b => b.classList.remove('is-active'));
+      btn.classList.add('is-active');
+      desenharComparativo();
+    });
   });
 
 })();
