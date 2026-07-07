@@ -47,6 +47,44 @@
 .btn-avatar-header:hover .avatar-header-ring { opacity: 1; }
 @keyframes spinRing { to { transform: rotate(360deg); } }
 
+/* ── Botão flutuante "Voltar" ────────────────── */
+.btn-voltar-produtos {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  text-decoration: none;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  padding: 10px 18px 10px 14px;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+  transition: var(--transition-mid);
+}
+.btn-voltar-produtos svg { flex-shrink: 0; transition: transform var(--transition-mid); }
+.btn-voltar-produtos:hover {
+  border-color: var(--pink-neon);
+  color: var(--pink-bright);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.35), 0 0 20px var(--pink-glow);
+}
+.btn-voltar-produtos:hover svg { transform: translateX(-3px); }
+
+@media (max-width: 600px) {
+  .btn-voltar-produtos span { display: none; }
+  .btn-voltar-produtos { padding: 10px; }
+}
+
 /* ── Breadcrumb ─────────────────────────────── */
 .breadcrumb {
   padding: 16px 32px;

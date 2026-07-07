@@ -436,7 +436,7 @@
   border: 1px solid var(--border-active);
   border-radius: var(--radius-xl);
   padding: 44px 36px;
-  max-width: 380px;
+  max-width: 400px;
   text-align: center;
   box-shadow: 0 0 60px var(--pink-glow), 0 24px 64px rgba(0,0,0,0.7);
   transform: scale(0.9) translateY(10px);
