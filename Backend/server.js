@@ -10,8 +10,8 @@ const app = express();
 // ── Centro de distribuição (origem fixa para o rastreio no mapa) ──
 const ARMAZEM_ORIGEM = {
     nome: 'Centro de Distribuição Nexus Imports — Contagem, MG',
-    lat: -19.9317,
-    lng: -44.0536
+    lat: -19.937916807774236,
+    lng: -44.03622928045531
 };
 
 // ── Middlewares ────────────────────────────────────
