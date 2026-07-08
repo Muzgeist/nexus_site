@@ -275,12 +275,11 @@
      da Nexus. Os valores são determinísticos (mesma semente = mesmo
      resultado) e recalculam sempre que o preço do produto mudar no
      banco — por isso "sempre atualizado". NÃO é uma integração real
-     com Mercado Livre / Amazon / etc (essas plataformas não permitem
+     com / Amazon / etc (essas plataformas não permitem
      scraping via navegador nem oferecem API pública de preço em
      tempo real para terceiros sem cadastro comercial). ─────────── */
 
   const LOJAS_COMPARATIVO = [
-    { id: 'mercadolivre', nome: 'Mercado Livre', cor: '#ffe600', variacaoMin: -0.04, variacaoMax: 0.14, freteMin: 0,  freteMax: 35,  prazoMin: 4,  prazoMax: 9  },
     { id: 'amazon',       nome: 'Amazon',         cor: '#ff9900', variacaoMin: -0.02, variacaoMax: 0.17, freteMin: 0,  freteMax: 25,  prazoMin: 3,  prazoMax: 7  },
     { id: 'kabum',        nome: 'Kabum!',         cor: '#ff6600', variacaoMin: -0.06, variacaoMax: 0.10, freteMin: 15, freteMax: 45,  prazoMin: 5,  prazoMax: 12 },
     { id: 'pichau',       nome: 'Pichau',         cor: '#7c3aed', variacaoMin: -0.03, variacaoMax: 0.13, freteMin: 10, freteMax: 40,  prazoMin: 5,  prazoMax: 11 },

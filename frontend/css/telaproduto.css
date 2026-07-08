@@ -431,14 +431,39 @@
    verticalmente ao centro da imagem — sem sobrepor a imagem nem o
    conteúdo de leitura. Abaixo do breakpoint, mantém o comportamento
    padrão (inline, abaixo da imagem). */
-@media (min-width: 1500px) {
-  .produto-img-col .btn-voltar-inline {
+/* Coluna da imagem serve como referência */
+.produto-img-col{
+    position: relative;
+}
+
+/* Coluna da imagem serve como referência */
+.produto-img-col{
+    position: relative;
+}
+
+/* Botão de voltar */
+.btn-voltar-inline{
     position: absolute;
-    top: 50%;
-    right: calc(100% + 28px);
-    transform: translateY(-50%);
-    margin-top: 0;
-  }
+
+    top: 18px;                  /* bem próximo ao topo da imagem */
+    right: calc(100% + 36px);   /* distância da imagem */
+
+    left: auto;
+    transform: none;
+    margin: 0;
+
+    padding: 6px 12px;
+    font-size: 11px;
+    min-height: 30px;
+
+    z-index: 5;
+}
+
+@media (min-width:1500px){
+    .produto-img-col .btn-voltar-inline{
+        top: 18px;
+        right: calc(100% + 36px);
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {
