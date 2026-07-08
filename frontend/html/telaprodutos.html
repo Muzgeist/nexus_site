@@ -55,6 +55,16 @@
     </div>
   </header>
 
+  <!-- Botão: voltar para a tela anterior -->
+  <div class="voltar-topo-wrap">
+    <button type="button" class="btn-voltar-inline" onclick="history.back()" aria-label="Voltar para a tela anterior" title="Voltar">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+        <path d="M19 12H5M12 5l-7 7 7 7"/>
+      </svg>
+      <span>Voltar</span>
+    </button>
+  </div>
+
   <!-- ── PAGE HERO ──────────────────────────────── -->
   <section class="produtos-hero reveal" aria-label="Produtos">
     <div class="produtos-hero-inner">
@@ -70,33 +80,44 @@
   <!-- ── BARRA DE FILTROS ───────────────────────── -->
   <section class="filter-bar-section reveal reveal-delay-1" aria-label="Filtros">
     <div class="filter-bar-inner">
-      <div class="filter-label">
+      <button class="btn-filter-toggle" id="btnFilterToggle" aria-expanded="false" aria-controls="filterBarBody">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
           <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
         </svg>
-        <span>Filtrar por categoria</span>
-      </div>
-      <div class="filter-chips" id="filterChips" role="group" aria-label="Categorias de produto">
-        <button class="filter-chip filter-chip--active" data-cat="" aria-pressed="true">Todos</button>
-        <!-- chips dinâmicos via JS -->
-      </div>
-      <div class="filter-search-wrap">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-          <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+        <span>Filtros</span>
+        <svg class="btn-filter-toggle-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
+          <polyline points="6 9 12 15 18 9"/>
         </svg>
-        <input
-          type="text"
-          id="searchInput"
-          class="filter-search"
-          placeholder="Buscar produto, marca…"
-          autocomplete="off"
-          aria-label="Buscar produto"
-        >
-        <button class="filter-search-clear" id="searchClear" aria-label="Limpar busca" style="display:none;">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+      </button>
+      <div class="filter-bar-body" id="filterBarBody">
+        <div class="filter-label">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
           </svg>
-        </button>
+          <span>Filtrar por categoria</span>
+        </div>
+        <div class="filter-chips" id="filterChips" role="group" aria-label="Categorias de produto">
+          <button class="filter-chip filter-chip--active" data-cat="" aria-pressed="true">Todos</button>
+          <!-- chips dinâmicos via JS -->
+        </div>
+        <div class="filter-search-wrap">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+          </svg>
+          <input
+            type="text"
+            id="searchInput"
+            class="filter-search"
+            placeholder="Buscar produto, marca…"
+            autocomplete="off"
+            aria-label="Buscar produto"
+          >
+          <button class="filter-search-clear" id="searchClear" aria-label="Limpar busca" style="display:none;">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
+        </div>
       </div>
     </div>
   </section>

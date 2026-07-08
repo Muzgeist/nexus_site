@@ -117,6 +117,14 @@
         </div>
         <!-- Badge de categoria -->
         <div class="produto-badge" id="produtoBadge"></div>
+
+        <!-- Botão: voltar para a lista de produtos -->
+        <a href="telaprodutos.html" class="btn-voltar-inline" aria-label="Voltar para produtos" title="Voltar para produtos">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M19 12H5M12 5l-7 7 7 7"/>
+          </svg>
+          <span>Voltar</span>
+        </a>
       </div>
 
       <!-- ── Coluna detalhes ───────────────────── -->
@@ -227,6 +235,29 @@
 
       </div>
     </div>
+
+    <!-- ── COMPARATIVO DE PREÇOS ─────────────────── -->
+    <section class="comparativo-section reveal reveal-delay-2" id="comparativoSection" aria-label="Comparativo de preços">
+      <div class="comparativo-header">
+        <div class="comparativo-title-wrap">
+          <h2 class="comparativo-title">Comparativo de preços</h2>
+          <p class="comparativo-subtitle">Veja como a Nexus se compara com outras lojas para este produto</p>
+        </div>
+        <div class="comparativo-filtros" role="group" aria-label="Ordenar comparativo">
+          <button class="filtro-btn is-active" data-filtro="relevancia">Relevância</button>
+          <button class="filtro-btn" data-filtro="menor">Menor preço</button>
+          <button class="filtro-btn" data-filtro="maior">Maior preço</button>
+        </div>
+      </div>
+
+      <div class="comparativo-lista" id="comparativoLista">
+        <!-- linhas geradas via JS -->
+      </div>
+
+      <p class="comparativo-aviso">
+        * Valores de referência calculados a partir do preço da Nexus, atualizados automaticamente sempre que o preço muda. Não representa integração em tempo real com as lojas citadas.
+      </p>
+    </section>
   </main>
 
   <!-- ── ERRO / NOT FOUND ───────────────────────── -->

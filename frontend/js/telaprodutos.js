@@ -29,6 +29,16 @@
   const btnAvatar = document.getElementById('btnAvatarHeader');
   if (btnAvatar) btnAvatar.addEventListener('click', () => window.location.href = 'telausuario.html');
 
+  /* ── 2b. TOGGLE DE FILTROS (telas pequenas) ──── */
+  const btnFilterToggle = document.getElementById('btnFilterToggle');
+  const filterBarBody   = document.getElementById('filterBarBody');
+  if (btnFilterToggle && filterBarBody) {
+    btnFilterToggle.addEventListener('click', () => {
+      const isOpen = filterBarBody.classList.toggle('open');
+      btnFilterToggle.setAttribute('aria-expanded', String(isOpen));
+    });
+  }
+
   /* ── 3. ESTADO ───────────────────────────────── */
   let todosOsProdutos = [];       // cache completo
   let categorias      = [];       // lista de categorias

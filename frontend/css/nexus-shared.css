@@ -207,6 +207,7 @@ body {
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
+  text-align: center;
   color: var(--text-primary);
   background: linear-gradient(135deg, var(--purple-700) 0%, var(--purple-600) 100%);
   border: 1px solid rgba(224, 64, 251, 0.3);
@@ -217,6 +218,15 @@ body {
   overflow: hidden;
   transition: var(--transition-mid);
   box-shadow: 0 4px 16px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.08);
+  /* Caixa de layout única (evita fragmentação em múltiplas linhas quando
+     o elemento é um <a> inline com texto quebrado — isso causava o
+     "degrau" visual no ::before posicionado em absolute) */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  line-height: 1.3;
+  text-decoration: none;
 }
 
 .btn-nexus::before {
@@ -545,6 +555,47 @@ body.theme-light .hamburger-dropdown {
 /* Reposiciona o nav antigo (oculto, substituído pelo hamburger) */
 .header-nav { display: none !important; }
 
+/* ════════════════════════════════════════════
+   NAV RESPONSIVA: em telas grandes os links do
+   menu ficam sempre visíveis lado a lado; em
+   telas pequenas viram o menu hamburguer.
+   ════════════════════════════════════════════ */
+@media (min-width: 769px) {
+  .btn-hamburger { display: none; }
+
+  .hamburger-dropdown {
+    position: static;
+    opacity: 1;
+    pointer-events: auto;
+    transform: none;
+    min-width: 0;
+    background: none;
+    border: none;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-right: 6px;
+  }
+
+  .hamburger-dropdown .hb-nav-link {
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+
+  body.theme-light .hamburger-dropdown { background: none; }
+}
+
+@media (max-width: 768px) {
+  .hamburger-dropdown {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
 /* Avatar header mantém o mesmo estilo já existente nas páginas */
 
 /* ════════════════════════════════════════════
@@ -748,3 +799,46 @@ body.theme-light .btn-logout:hover {
 }
 
 .btn-avatar-header:hover .avatar-header-ring { opacity: 1; }
+
+/* ── Botão de voltar (inline, sem sobreposição) ─────────── */
+.btn-voltar-inline {
+  position: static;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  text-decoration: none;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  padding: 10px 18px 10px 14px;
+  transition: var(--transition-mid);
+  width: fit-content;
+}
+.btn-voltar-inline svg { flex-shrink: 0; transition: transform var(--transition-mid); }
+.btn-voltar-inline:hover {
+  border-color: var(--pink-neon);
+  color: var(--pink-bright);
+  box-shadow: 0 0 20px var(--pink-glow);
+}
+.btn-voltar-inline:hover svg { transform: translateX(-3px); }
+
+/* Container padrão usado nas telas sem coluna de imagem própria
+   (carrinho, compras, produtos, usuário) para posicionar o botão
+   de voltar no topo do conteúdo, sem sobrepor nada. */
+.voltar-topo-wrap {
+  display: flex;
+  padding: 20px 32px 0;
+  position: relative;
+  z-index: 1;
+}
+@media (max-width: 640px) {
+  .voltar-topo-wrap { padding: 16px 16px 0; }
+}
