@@ -799,3 +799,46 @@ body.theme-light .btn-logout:hover {
 }
 
 .btn-avatar-header:hover .avatar-header-ring { opacity: 1; }
+
+/* ── Botão de voltar (inline, sem sobreposição) ─────────── */
+.btn-voltar-inline {
+  position: static;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  text-decoration: none;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  padding: 10px 18px 10px 14px;
+  transition: var(--transition-mid);
+  width: fit-content;
+}
+.btn-voltar-inline svg { flex-shrink: 0; transition: transform var(--transition-mid); }
+.btn-voltar-inline:hover {
+  border-color: var(--pink-neon);
+  color: var(--pink-bright);
+  box-shadow: 0 0 20px var(--pink-glow);
+}
+.btn-voltar-inline:hover svg { transform: translateX(-3px); }
+
+/* Container padrão usado nas telas sem coluna de imagem própria
+   (carrinho, compras, produtos, usuário) para posicionar o botão
+   de voltar no topo do conteúdo, sem sobrepor nada. */
+.voltar-topo-wrap {
+  display: flex;
+  padding: 20px 32px 0;
+  position: relative;
+  z-index: 1;
+}
+@media (max-width: 640px) {
+  .voltar-topo-wrap { padding: 16px 16px 0; }
+}

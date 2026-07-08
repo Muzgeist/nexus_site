@@ -44,6 +44,16 @@
     </div>
   </header>
 
+  <!-- Botão: voltar para a tela anterior -->
+  <div class="voltar-topo-wrap">
+    <button type="button" class="btn-voltar-inline" onclick="history.back()" aria-label="Voltar para a tela anterior" title="Voltar">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+        <path d="M19 12H5M12 5l-7 7 7 7"/>
+      </svg>
+      <span>Voltar</span>
+    </button>
+  </div>
+
   <main class="usuario-main">
 
     <!-- Avatar hero com edição de foto -->
@@ -179,6 +189,33 @@
           <p class="campo-valor" id="telefone">(00) 00000-0000</p>
           <div class="campo-edit-wrap" style="display:none">
             <input type="tel" class="campo-input" value="(00) 00000-0000" maxlength="15" autocomplete="tel">
+            <div class="edit-actions">
+              <button class="btn-save">Salvar</button>
+              <button class="btn-cancel">Cancelar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="perfil-campo reveal reveal-delay-5" data-field="endereco">
+        <div class="campo-header">
+          <span class="campo-icone">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 10c0 7-9 12-9 12s-9-5-9-12a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+            </svg>
+          </span>
+          <span class="campo-rotulo">Endereço</span>
+          <button class="btn-editar" aria-label="Editar endereço">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+            </svg>
+          </button>
+        </div>
+        <div class="campo-valor-wrap">
+          <p class="campo-valor" id="endereco">Endereço não informado</p>
+          <div class="campo-edit-wrap" style="display:none">
+            <input type="text" class="campo-input" value="Endereço não informado" autocomplete="street-address">
             <div class="edit-actions">
               <button class="btn-save">Salvar</button>
               <button class="btn-cancel">Cancelar</button>

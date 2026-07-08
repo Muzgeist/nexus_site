@@ -22,12 +22,14 @@
   const elEmail     = document.getElementById('email');
   const elCpf       = document.getElementById('cpf');
   const elTelefone  = document.getElementById('telefone');
+  const elEndereco  = document.getElementById('endereco');
 
   if (displayNome) displayNome.textContent = usuario.nome || 'Nome do Usuário';
   if (elNome)      elNome.textContent      = usuario.nome || '';
   if (elEmail)     elEmail.textContent     = usuario.email || '';
   if (elCpf)        elCpf.textContent      = usuario.cpf_cnpj || '';
   if (elTelefone)   elTelefone.textContent = usuario.telefone || '';
+  if (elEndereco)   elEndereco.textContent = usuario.endereco || 'Endereço não informado';
 
   // Os inputs de edição (escondidos) também recebem o valor atual,
   // já que o HTML traz valores de exemplo fixos.
@@ -179,13 +181,13 @@
       const newVal = inputEl.value.trim();
       if (!newVal) { showFieldError(); return; }
 
-      // A rota PUT /usuario/:id atualiza nome/email/telefone juntos,
-      // então sempre reenviamos os 3 (só o campo editado muda de fato).
+      // A rota PUT /usuario/:id atualiza nome/email/telefone/endereço juntos,
+      // então sempre reenviamos os 4 (só o campo editado muda de fato).
       const payload = {
         nome:     field === 'nome'     ? newVal : (elNome?.textContent || usuario.nome),
         email:    field === 'email'    ? newVal : usuario.email,
         telefone: field === 'telefone' ? newVal : usuario.telefone,
-        endereco: usuario.endereco,
+        endereco: field === 'endereco' ? newVal : usuario.endereco,
       };
 
       try {

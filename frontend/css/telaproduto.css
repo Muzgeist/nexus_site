@@ -48,42 +48,8 @@
 @keyframes spinRing { to { transform: rotate(360deg); } }
 
 /* ── Botão flutuante "Voltar" ────────────────── */
-.btn-voltar-produtos {
-  position: fixed;
-  top: 16px;
-  left: 16px;
-  z-index: 200;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-family: var(--font-display);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--text-primary);
-  text-decoration: none;
-  background: var(--bg-card);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-full);
-  padding: 10px 18px 10px 14px;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  box-shadow: 0 4px 20px rgba(0,0,0,0.35);
-  transition: var(--transition-mid);
-}
-.btn-voltar-produtos svg { flex-shrink: 0; transition: transform var(--transition-mid); }
-.btn-voltar-produtos:hover {
-  border-color: var(--pink-neon);
-  color: var(--pink-bright);
-  box-shadow: 0 4px 20px rgba(0,0,0,0.35), 0 0 20px var(--pink-glow);
-}
-.btn-voltar-produtos:hover svg { transform: translateX(-3px); }
-
-@media (max-width: 600px) {
-  .btn-voltar-produtos span { display: none; }
-  .btn-voltar-produtos { padding: 10px; }
-}
+/* Botão de voltar agora fica abaixo da imagem do produto,
+   ver .btn-voltar-inline em nexus-shared.css */
 
 /* ── Breadcrumb ─────────────────────────────── */
 .breadcrumb {
@@ -460,6 +426,21 @@
   .modal-actions { flex-direction: column; }
 }
 
+/* Em telas largas, quando sobra espaço na lateral, o botão de voltar
+   sai do fluxo abaixo da imagem e vai para a margem esquerda, alinhado
+   verticalmente ao centro da imagem — sem sobrepor a imagem nem o
+   conteúdo de leitura. Abaixo do breakpoint, mantém o comportamento
+   padrão (inline, abaixo da imagem). */
+@media (min-width: 1500px) {
+  .produto-img-col .btn-voltar-inline {
+    position: absolute;
+    top: 50%;
+    right: calc(100% + 28px);
+    transform: translateY(-50%);
+    margin-top: 0;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .estoque-dot { animation: none !important; }
   .avatar-header-ring { animation: none !important; }
@@ -471,7 +452,6 @@
   width: 100vw;
   margin: 48px calc(50% - 50vw) 0;
   padding: 36px max(32px, calc((100vw - 1100px) / 2 + 32px)) 32px;
->>>>>>> db7f0289918aab3032125a0de8f31e3424e2b27f
   background: var(--bg-card);
   border-top: 1px solid var(--border-subtle);
   border-bottom: 1px solid var(--border-subtle);
