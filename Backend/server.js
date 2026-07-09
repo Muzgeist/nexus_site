@@ -29,6 +29,11 @@ app.use((req, res, next) => {
 // Serve os arquivos do frontend automaticamente
 app.use(express.static(path.join(__dirname, '../frontend')));
 
+// A raiz do site abre a tela principal (não existe index.html no projeto)
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/html/telaprincipal.html'));
+});
+
 // ── Status ─────────────────────────────────────────
 app.get('/status', (req, res) => {
     res.json({ ok: true });
