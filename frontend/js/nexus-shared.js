@@ -4,15 +4,15 @@
    ============================================ */
 
 // ── URL base da API ──
-// Em produção (Railway, ou qualquer domínio real) o frontend é servido
-// pelo próprio backend, então usamos a mesma origem (string vazia).
-// Só usamos localhost:3000 quando a página é aberta direto do disco
-// (file://) ou via um servidor local de frontend em outra porta.
+// Frontend e backend agora são dois serviços separados no Railway,
+// cada um com seu próprio domínio — então não dá pra usar
+// window.location.origin (isso apontaria pro próprio frontend).
+// Em localhost continua batendo na porta 3000 padrão do backend local.
 window.NEXUS_API_BASE = (function () {
   const { protocol, hostname } = window.location;
   if (protocol === 'file:') return 'http://localhost:3000';
   if (hostname === 'localhost' || hostname === '127.0.0.1') return 'http://localhost:3000';
-  return window.location.origin;
+  return 'https://nexussite-backend-production.up.railway.app';
 })();
 
 // ── Scroll Reveal (IntersectionObserver lazy) ──
