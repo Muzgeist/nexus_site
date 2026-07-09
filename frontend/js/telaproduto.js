@@ -10,7 +10,7 @@
 (function () {
   'use strict';
 
-  const API = 'http://localhost:3000';
+  const API = window.NEXUS_API_BASE;
 
   /* ── 1. GUARD DE AUTENTICAÇÃO ────────────────── */
   const usuarioRaw = sessionStorage.getItem('usuario');
