@@ -26,13 +26,20 @@ app.use((req, res, next) => {
     next();
 });
 
-// Serve os arquivos do frontend automaticamente
-app.use(express.static(path.join(__dirname, '../frontend')));
-
-// A raiz do site abre a tela principal (não existe index.html no projeto)
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '../frontend/html/telaprincipal.html'));
-});
+// Serve os arquivos do frontend automaticamente (apenas em desenvolvimento
+// local, quando as pastas Backend/ e frontend/ estão lado a lado).
+// Em produção o frontend roda como um serviço separado no Railway.
+const frontendPath = path.join(__dirname, '../frontend');
+if (require('fs').existsSync(frontendPath)) {
+    app.use(express.static(frontendPath));
+    app.get('/', (req, res) => {
+        res.sendFile(path.join(frontendPath, 'html/telaprincipal.html'));
+    });
+} else {
+    app.get('/', (req, res) => {
+        res.json({ ok: true, service: 'nexus-backend' });
+    });
+}
 
 // ── Status ─────────────────────────────────────────
 app.get('/status', (req, res) => {
