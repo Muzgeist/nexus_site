@@ -49,10 +49,19 @@ app.get('/status', (req, res) => {
 // ── Cadastro ────────────────────────────────────────
 app.post('/cadastro', async (req, res) => {
     try {
-        const { nome, email, cpf_cnpj, telefone, endereco, senha } = req.body;
+        let { nome, email, cpf_cnpj, telefone, endereco, senha } = req.body;
+
+        // Remove pontuação (o frontend manda mascarado, ex: "48.685.465/4654-36",
+        // mas as colunas do banco guardam só os dígitos)
+        if (cpf_cnpj) cpf_cnpj = cpf_cnpj.replace(/\D/g, '');
+        if (telefone) telefone = telefone.replace(/\D/g, '');
 
         if (!nome || !email || !cpf_cnpj || !senha) {
             return res.status(400).json({ erro: 'Nome, email, CPF/CNPJ e senha são obrigatórios' });
+        }
+
+        if (cpf_cnpj.length !== 11 && cpf_cnpj.length !== 14) {
+            return res.status(400).json({ erro: 'CPF/CNPJ inválido' });
         }
 
         const emailExiste = await executarQuery(
@@ -137,7 +146,9 @@ app.post('/login', async (req, res) => {
 app.put('/usuario/:id', async (req, res) => {
     try {
         const { id } = req.params;
-        const { nome, email, telefone, endereco } = req.body;
+        let { nome, email, telefone, endereco } = req.body;
+
+        if (telefone) telefone = telefone.replace(/\D/g, '');
 
         if (!nome) {
             return res.status(400).json({ erro: 'Nome é obrigatório' });
