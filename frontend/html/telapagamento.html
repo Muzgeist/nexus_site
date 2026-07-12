@@ -99,6 +99,30 @@
       <!-- ── Coluna esquerda: formas de pagamento ── -->
       <section class="pagamento-col-form reveal reveal-delay-1">
 
+        <!-- ── Endereço de entrega ── -->
+        <div class="endereco-secao">
+          <span class="campo-label endereco-secao-titulo">Endereço de entrega</span>
+
+          <div class="cartao-tipo-toggle endereco-opcoes" role="radiogroup" aria-label="Endereço de entrega">
+            <label class="tipo-pill">
+              <input type="radio" name="opcaoEndereco" value="cadastrado" checked>
+              <span>Usar endereço cadastrado</span>
+            </label>
+            <label class="tipo-pill">
+              <input type="radio" name="opcaoEndereco" value="outro">
+              <span>Enviar para outro endereço</span>
+            </label>
+          </div>
+
+          <p class="metodo-desc endereco-atual" id="enderecoAtualTexto"></p>
+
+          <div id="novoEnderecoWrap" class="novo-endereco-wrap" hidden>
+            <label class="campo-label" for="novoEndereco">Endereço para entrega deste pedido</label>
+            <textarea id="novoEndereco" class="campo-input novo-endereco-input" rows="3"
+              placeholder="Rua, número, bairro, cidade - UF, CEP"></textarea>
+          </div>
+        </div>
+
         <div class="metodo-tabs" role="tablist" aria-label="Forma de pagamento">
           <button type="button" class="metodo-tab active" data-metodo="pix" role="tab" aria-selected="true">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l4 4-4 4-4-4 4-4zm0 12l4 4-4 4-4-4 4-4zM2 12l4-4 4 4-4 4-4-4zm16 0l4-4 4 4-4 4-4-4z"/></svg>

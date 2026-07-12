@@ -86,6 +86,58 @@
   // Payload comum enviado a qualquer rota de pagamento
   const itensPayload = itens.map(i => ({ produto_id: i.produto_id, quantidade: i.quantidade }));
 
+  /* ── 5.1 ENDEREÇO DE ENTREGA ─────────────────── */
+  const radiosEndereco   = document.querySelectorAll('input[name="opcaoEndereco"]');
+  const enderecoAtualEl  = document.getElementById('enderecoAtualTexto');
+  const novoEnderecoWrap = document.getElementById('novoEnderecoWrap');
+  const novoEnderecoEl   = document.getElementById('novoEndereco');
+
+  const enderecoCadastrado = (usuario.endereco || '').trim();
+  enderecoAtualEl.textContent = enderecoCadastrado
+    ? `Endereço cadastrado: ${enderecoCadastrado}`
+    : 'Nenhum endereço cadastrado no perfil. Selecione "Enviar para outro endereço" para continuar.';
+
+  function opcaoEnderecoAtual() {
+    const radio = document.querySelector('input[name="opcaoEndereco"]:checked');
+    return radio ? radio.value : 'cadastrado';
+  }
+
+  radiosEndereco.forEach(r => {
+    r.addEventListener('change', () => {
+      const outro = opcaoEnderecoAtual() === 'outro';
+      novoEnderecoWrap.hidden = !outro;
+      novoEnderecoEl.classList.remove('campo-invalido');
+      if (outro) novoEnderecoEl.focus();
+    });
+  });
+
+  // Sem endereço cadastrado: força a opção "outro endereço" de cara
+  if (!enderecoCadastrado) {
+    const radioOutro = document.querySelector('input[name="opcaoEndereco"][value="outro"]');
+    if (radioOutro) radioOutro.checked = true;
+    novoEnderecoWrap.hidden = false;
+  }
+
+  // Retorna o endereço a usar neste pedido, ou null (e mostra aviso) se inválido
+  function obterEnderecoEntrega() {
+    if (opcaoEnderecoAtual() === 'outro') {
+      const valor = novoEnderecoEl.value.trim();
+      if (!valor) {
+        showToast('Informe o endereço para entrega deste pedido.', 'error');
+        novoEnderecoEl.classList.add('campo-invalido');
+        novoEnderecoEl.focus();
+        return null;
+      }
+      novoEnderecoEl.classList.remove('campo-invalido');
+      return valor;
+    }
+    if (!enderecoCadastrado) {
+      showToast('Nenhum endereço cadastrado. Selecione "Enviar para outro endereço".', 'error');
+      return null;
+    }
+    return enderecoCadastrado;
+  }
+
   /* ── 6. ALTERNÂNCIA DE ABAS (Pix / Cartão / Boleto) ── */
   const tabs    = document.querySelectorAll('.metodo-tab');
   const paineis = document.querySelectorAll('.metodo-painel');
@@ -148,6 +200,9 @@
   let pixTxidAtual = null;
 
   btnGerarPix.addEventListener('click', async () => {
+    const enderecoEntrega = obterEnderecoEntrega();
+    if (!enderecoEntrega) return;
+
     btnGerarPix.disabled = true;
     btnGerarPix.innerHTML = '<span>Gerando cobrança…</span>';
 
@@ -155,7 +210,7 @@
       const res = await fetch(`${API}/pagamento/pix`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ usuario_id: usuario.id, itens: itensPayload })
+        body: JSON.stringify({ usuario_id: usuario.id, itens: itensPayload, endereco_entrega: enderecoEntrega })
       });
       const data = await res.json();
 
@@ -315,6 +370,9 @@
   cartaoForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
+    const enderecoEntrega = obterEnderecoEntrega();
+    if (!enderecoEntrega) return;
+
     const numero    = cartaoNumero.value.replace(/\s/g, '');
     const nome      = document.getElementById('cartaoNome').value.trim();
     const validade  = cartaoValidade.value.trim();
@@ -337,6 +395,7 @@
         body: JSON.stringify({
           usuario_id: usuario.id,
           itens: itensPayload,
+          endereco_entrega: enderecoEntrega,
           forma_pagamento: tipo,
           parcelas: tipo === 'CREDITO' ? parseInt(cartaoParcelas.value) : 1,
           cartao: {
@@ -379,6 +438,9 @@
   let boletoCodigoAtual = null;
 
   btnGerarBoleto.addEventListener('click', async () => {
+    const enderecoEntrega = obterEnderecoEntrega();
+    if (!enderecoEntrega) return;
+
     btnGerarBoleto.disabled = true;
     btnGerarBoleto.innerHTML = '<span>Gerando boleto…</span>';
 
@@ -386,7 +448,7 @@
       const res = await fetch(`${API}/pagamento/boleto`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ usuario_id: usuario.id, itens: itensPayload })
+        body: JSON.stringify({ usuario_id: usuario.id, itens: itensPayload, endereco_entrega: enderecoEntrega })
       });
       const data = await res.json();
 
