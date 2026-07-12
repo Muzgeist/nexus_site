@@ -422,7 +422,7 @@ app.get('/usuarios', async (req, res) => {
 // valor corretos de acordo com o botão que a chamou.
 // ============================================================
 
-// ── Helper: valida usuário e endereço de entrega ────
+// ── Helper: valida usuário ──────────────────────────
 async function buscarUsuarioValido(usuario_id) {
     const usuarios = await executarQuery('SELECT * FROM usuario WHERE id = ?', [usuario_id]);
     if (usuarios.length === 0) {
@@ -430,21 +430,22 @@ async function buscarUsuarioValido(usuario_id) {
         erro.status = 404;
         throw erro;
     }
-    const usuario = usuarios[0];
-    if (!usuario.endereco) {
-        const erro = new Error('Cadastre um endereço antes de comprar');
-        erro.status = 400;
-        throw erro;
-    }
-    return usuario;
+    return usuarios[0];
 }
 
 // ── Helper: cria as linhas de `compra` de um pedido inteiro ────
 // (um carrinho com 3 produtos gera 3 linhas, todas com o mesmo
 // pix_txid/boleto_codigo, para poderem ser confirmadas juntas)
-async function criarLinhasDePedido({ usuario, itens, forma_pagamento, parcelas = 1, pago = false, pix_txid = null, boleto_codigo = null, boleto_vencimento = null }) {
+async function criarLinhasDePedido({ usuario, itens, forma_pagamento, parcelas = 1, pago = false, pix_txid = null, boleto_codigo = null, boleto_vencimento = null, enderecoEntrega = null }) {
     const comprasIds = [];
     let valorTotal = 0;
+
+    const enderecoFinal = (enderecoEntrega && enderecoEntrega.trim()) ? enderecoEntrega.trim() : usuario.endereco;
+    if (!enderecoFinal) {
+        const erro = new Error('Informe um endereço de entrega para continuar');
+        erro.status = 400;
+        throw erro;
+    }
 
     for (const item of itens) {
         const { produto_id, quantidade } = item;
@@ -478,7 +479,7 @@ async function criarLinhasDePedido({ usuario, itens, forma_pagamento, parcelas =
                  status_pagamento, pago_em, status_entrega)
              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
             [
-                usuario.id, usuario.nome, usuario.email, usuario.cpf_cnpj, usuario.telefone || null, usuario.endereco,
+                usuario.id, usuario.nome, usuario.email, usuario.cpf_cnpj, usuario.telefone || null, enderecoFinal,
                 produto.id, produto.produto, quantidade, produto.valor_unitario,
                 forma_pagamento, parcelas, pix_txid, boleto_codigo, boleto_vencimento,
                 statusPagamento, pagoEm, statusEntrega
@@ -501,7 +502,7 @@ async function criarLinhasDePedido({ usuario, itens, forma_pagamento, parcelas =
 // ── Pix: gera a cobrança (QR Code / Copia e Cola) ───
 app.post('/pagamento/pix', async (req, res) => {
     try {
-        const { usuario_id, itens } = req.body;
+        const { usuario_id, itens, endereco_entrega } = req.body;
         if (!usuario_id || !itens || itens.length === 0) {
             return res.status(400).json({ erro: 'Dados de pagamento inválidos' });
         }
@@ -510,7 +511,7 @@ app.post('/pagamento/pix', async (req, res) => {
         const txid = gerarTxid();
 
         const { comprasIds, valorTotal } = await criarLinhasDePedido({
-            usuario, itens, forma_pagamento: 'PIX', pago: false, pix_txid: txid
+            usuario, itens, forma_pagamento: 'PIX', pago: false, pix_txid: txid, enderecoEntrega: endereco_entrega
         });
 
         const payload = gerarPayloadPix({
@@ -568,7 +569,7 @@ app.post('/pagamento/pix/:txid/confirmar', async (req, res) => {
 // dados sensíveis do cartão, nunca o seu próprio servidor).
 app.post('/pagamento/cartao', async (req, res) => {
     try {
-        const { usuario_id, itens, forma_pagamento, parcelas, cartao } = req.body;
+        const { usuario_id, itens, forma_pagamento, parcelas, cartao, endereco_entrega } = req.body;
 
         if (!usuario_id || !itens || itens.length === 0) {
             return res.status(400).json({ erro: 'Dados de pagamento inválidos' });
@@ -586,7 +587,8 @@ app.post('/pagamento/cartao', async (req, res) => {
             usuario, itens,
             forma_pagamento,
             parcelas: forma_pagamento === 'CREDITO' ? (parseInt(parcelas) || 1) : 1,
-            pago: true
+            pago: true,
+            enderecoEntrega: endereco_entrega
         });
 
         res.status(201).json({
@@ -603,7 +605,7 @@ app.post('/pagamento/cartao', async (req, res) => {
 // ── Boleto: gera o boleto ────────────────────────────
 app.post('/pagamento/boleto', async (req, res) => {
     try {
-        const { usuario_id, itens } = req.body;
+        const { usuario_id, itens, endereco_entrega } = req.body;
         if (!usuario_id || !itens || itens.length === 0) {
             return res.status(400).json({ erro: 'Dados de pagamento inválidos' });
         }
@@ -617,7 +619,7 @@ app.post('/pagamento/boleto', async (req, res) => {
 
         const { comprasIds, valorTotal } = await criarLinhasDePedido({
             usuario, itens, forma_pagamento: 'BOLETO', pago: false,
-            boleto_codigo: codigo, boleto_vencimento: vencimentoStr
+            boleto_codigo: codigo, boleto_vencimento: vencimentoStr, enderecoEntrega: endereco_entrega
         });
 
         res.status(201).json({

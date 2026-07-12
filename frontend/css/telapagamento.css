@@ -63,6 +63,36 @@
   -webkit-backdrop-filter: blur(12px);
 }
 
+/* ── Endereço de entrega ─────────────────────── */
+.endereco-secao {
+  margin-bottom: 24px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.endereco-secao-titulo { margin-bottom: 10px; }
+
+.endereco-opcoes { margin-bottom: 12px; }
+
+.endereco-atual {
+  margin-bottom: 0;
+  font-size: 12.5px;
+}
+
+.novo-endereco-wrap { margin-top: 14px; }
+
+.novo-endereco-input {
+  resize: vertical;
+  min-height: 72px;
+  font-family: var(--font-body);
+  line-height: 1.5;
+}
+
+.novo-endereco-input.campo-invalido {
+  border-color: #ff5c5c;
+  box-shadow: 0 0 0 3px rgba(255,92,92,0.12);
+}
+
 /* Tabs de método */
 .metodo-tabs {
   display: flex;
