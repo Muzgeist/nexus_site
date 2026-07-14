@@ -38,7 +38,7 @@ classDiagram
         - cpf_cnpj
         - telefone
         - endereco
-        - senha (hash bcrypt)
+        - senha_hash
         + cadastrar()
         + login()
         + editarPerfil()
@@ -81,22 +81,33 @@ classDiagram
 
 ```mermaid
 flowchart TD
-    Login[telalogin.html] -->|login OK| Principal[telaprincipal.html]
-    Login --> Cadastro[telacadastro.html]
+    Login[telalogin.html]
+    Cadastro[telacadastro.html]
+    Principal[telaprincipal.html]
+    Produtos[telaprodutos.html]
+    ProdutoDetalhe[telaproduto.html]
+    Usuario[telausuario.html]
+    Carrinho[telacarrinho.html]
+    Pagamento[telapagamento.html]
+    Pedidos[telacompras.html]
+    Rastreio[telarastreio.html]
+
+    Login -->|login OK| Principal
+    Login --> Cadastro
     Cadastro -->|cadastro OK| Login
 
-    Principal --> Produtos[telaprodutos.html]
-    Principal --> Usuario[telausuario.html]
-    Principal --> Pedidos[telacompras.html]
+    Principal --> Produtos
+    Principal --> Usuario
+    Principal --> Pedidos
 
-    Produtos --> ProdutoDetalhe[telaproduto.html]
-    ProdutoDetalhe -->|Comprar agora| Pagamento[telapagamento.html]
-    ProdutoDetalhe -->|Adicionar| Carrinho[telacarrinho.html]
+    Produtos --> ProdutoDetalhe
+    ProdutoDetalhe -->|Comprar agora| Pagamento
+    ProdutoDetalhe -->|Adicionar| Carrinho
 
     Carrinho -->|Comprar| Pagamento
     Pagamento -->|Pagamento aprovado| Pedidos
 
-    Pedidos -->|Rastrear Envio| Rastreio[telarastreio.html]
+    Pedidos -->|Rastrear Envio| Rastreio
 ```
 
 # Rotas da API (Backend)
@@ -210,11 +221,11 @@ sequenceDiagram
     participant DB as MySQL
 
     UI ->> JS: submit do formulário
-    JS ->> API: POST /login {email, senha}
+    JS ->> API: POST /login (email, senha)
     API ->> DB: SELECT * FROM usuario WHERE email = ?
     DB -->> API: registro do usuário
     API ->> API: bcrypt.compare(senha, hash)
-    API -->> JS: 200 { usuario }
+    API -->> JS: 200 OK (usuario)
     JS ->> JS: sessionStorage.setItem('usuario', ...)
     JS ->> UI: redireciona para telaprincipal.html
 ```
@@ -253,16 +264,16 @@ sequenceDiagram
     Carrinho ->> Carrinho: sessionStorage.setItem('pedidoPendente', itens)
     Carrinho ->> UI: redireciona para telapagamento.html
     UI ->> JS: lê 'pedidoPendente' do sessionStorage
-    JS ->> API: POST /pagamento/pix {usuario_id, itens}
+    JS ->> API: POST /pagamento/pix (usuario_id, itens)
     API ->> DB: valida usuário/endereço, valida estoque
     API ->> Util: gerarTxid() / gerarPayloadPix()
     API ->> DB: INSERT em compra (status PENDENTE) por item
     API ->> DB: UPDATE produtos (desconta estoque)
-    API -->> JS: { txid, pix_copia_cola, valor_total }
+    API -->> JS: retorna txid, pix_copia_cola, valor_total
     JS ->> UI: renderiza QR Code / copia-e-cola
     UI ->> JS: clique em "Já paguei" (simulação)
     JS ->> API: POST /pagamento/pix/:txid/confirmar
-    API ->> DB: UPDATE compra SET status_pagamento='PAGO'
+    API ->> DB: UPDATE compra SET status_pagamento igual PAGO
     API -->> JS: confirmação
     JS ->> UI: mostrarSucesso() + limpa carrinho
 ```
@@ -280,7 +291,7 @@ sequenceDiagram
     UI ->> JS: carregarRastreio(id)
     JS ->> API: GET /pedido/:id/rastreio
     API ->> API: calcula progresso_pct e eta_estimada
-    API -->> JS: { origem, destino_endereco, progresso_pct, status_entrega }
+    API -->> JS: retorna origem, destino_endereco, progresso_pct, status_entrega
     JS ->> JS: montarStepper(status_entrega)
     JS ->> Maps: Geocoding (endereço) + Directions (rota)
     Maps -->> JS: rota + coordenadas
