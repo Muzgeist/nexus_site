@@ -2,6 +2,93 @@
 
 E-commerce fictício (projeto de estudo) de hardware e periféricos de informática, com frontend em HTML/CSS/JS puro (visual dark/neon roxo-rosa) e backend em Node.js/Express + MySQL. Cobre o fluxo completo de uma loja virtual: cadastro/login, catálogo com filtros, carrinho, checkout com Pix/Cartão/Boleto, histórico de pedidos e rastreio de entrega num mapa.
 
+
+## Diagrama de Sequência — **Login**
+```mermaid
+sequenceDiagram
+    participant UI as telalogin.html
+    participant JS as telalogin.js
+    participant API as Express (server.js)
+    participant DB as MySQL
+
+    UI ->> JS: submit do formulário
+    JS ->> API: POST /login (email, senha)
+    API ->> DB: SELECT * FROM usuario WHERE email = ?
+    DB -->> API: registro do usuário
+    API ->> API: bcrypt.compare(senha, hash)
+    API -->> JS: 200 OK (usuario)
+    JS ->> JS: sessionStorage.setItem('usuario', ...)
+    JS ->> UI: redireciona para telaprincipal.html
+```
+
+## Diagrama de Sequência — **Listagem e Filtro de Produtos**
+```mermaid
+sequenceDiagram
+    participant UI as telaprodutos.html
+    participant JS as telaprodutos.js
+    participant API as Express (server.js)
+    participant DB as MySQL (vw_estoque_resumo)
+
+    UI ->> JS: DOMContentLoaded (init)
+    JS ->> API: GET /produtos
+    JS ->> API: GET /categorias
+    API ->> DB: SELECT * FROM vw_estoque_resumo
+    API ->> DB: SELECT DISTINCT categoria FROM produtos
+    DB -->> API: linhas de produtos / categorias
+    API -->> JS: JSON produtos + categorias
+    JS ->> JS: renderCarrosseis() / renderChips()
+    UI ->> JS: usuário digita na busca / clica em chip
+    JS ->> JS: filtrarProdutos() (client-side)
+    JS ->> UI: ativarGrade() com resultado filtrado
+```
+
+## Diagrama de Sequência — **Checkout via Pix**
+```mermaid
+sequenceDiagram
+    participant Carrinho as telacarrinho.js
+    participant UI as telapagamento.html
+    participant JS as telapagamento.js
+    participant API as Express (server.js)
+    participant Util as utils/pagamentos.js
+    participant DB as MySQL
+
+    Carrinho ->> Carrinho: sessionStorage.setItem('pedidoPendente', itens)
+    Carrinho ->> UI: redireciona para telapagamento.html
+    UI ->> JS: lê 'pedidoPendente' do sessionStorage
+    JS ->> API: POST /pagamento/pix (usuario_id, itens)
+    API ->> DB: valida usuário/endereço, valida estoque
+    API ->> Util: gerarTxid() / gerarPayloadPix()
+    API ->> DB: INSERT em compra (status PENDENTE) por item
+    API ->> DB: UPDATE produtos (desconta estoque)
+    API -->> JS: retorna txid, pix_copia_cola, valor_total
+    JS ->> UI: renderiza QR Code / copia-e-cola
+    UI ->> JS: clique em "Já paguei" (simulação)
+    JS ->> API: POST /pagamento/pix/:txid/confirmar
+    API ->> DB: UPDATE compra SET status_pagamento igual PAGO
+    API -->> JS: confirmação
+    JS ->> UI: mostrarSucesso() + limpa carrinho
+```
+
+## Diagrama de Sequência — **Rastreio de Entrega**
+```mermaid
+sequenceDiagram
+    participant Pedidos as telacompras.html
+    participant UI as telarastreio.html
+    participant JS as telarastreio.js
+    participant API as Express (server.js)
+    participant Maps as Google Maps API
+
+    Pedidos ->> UI: clique em "Rastrear Envio" (?id=)
+    UI ->> JS: carregarRastreio(id)
+    JS ->> API: GET /pedido/:id/rastreio
+    API ->> API: calcula progresso_pct e eta_estimada
+    API -->> JS: retorna origem, destino_endereco, progresso_pct, status_entrega
+    JS ->> JS: montarStepper(status_entrega)
+    JS ->> Maps: Geocoding (endereço) + Directions (rota)
+    Maps -->> JS: rota + coordenadas
+    JS ->> UI: desenha rota e posiciona marcador do pacote
+```
+
 # Caso de Uso
 
 ```mermaid
@@ -209,91 +296,4 @@ mysql -u root -p Banco < sql/migracao_pagamento_rastreio.sql
 npm start
 ```
 
-**O backend também serve o frontend automaticamente em:** `http://localhost:3000`
-(o `express.static` aponta para a pasta `frontend/`, então basta abrir `telalogin.html` a partir dali).
 
-## Diagrama de Sequência — **Login**
-```mermaid
-sequenceDiagram
-    participant UI as telalogin.html
-    participant JS as telalogin.js
-    participant API as Express (server.js)
-    participant DB as MySQL
-
-    UI ->> JS: submit do formulário
-    JS ->> API: POST /login (email, senha)
-    API ->> DB: SELECT * FROM usuario WHERE email = ?
-    DB -->> API: registro do usuário
-    API ->> API: bcrypt.compare(senha, hash)
-    API -->> JS: 200 OK (usuario)
-    JS ->> JS: sessionStorage.setItem('usuario', ...)
-    JS ->> UI: redireciona para telaprincipal.html
-```
-
-## Diagrama de Sequência — **Listagem e Filtro de Produtos**
-```mermaid
-sequenceDiagram
-    participant UI as telaprodutos.html
-    participant JS as telaprodutos.js
-    participant API as Express (server.js)
-    participant DB as MySQL (vw_estoque_resumo)
-
-    UI ->> JS: DOMContentLoaded (init)
-    JS ->> API: GET /produtos
-    JS ->> API: GET /categorias
-    API ->> DB: SELECT * FROM vw_estoque_resumo
-    API ->> DB: SELECT DISTINCT categoria FROM produtos
-    DB -->> API: linhas de produtos / categorias
-    API -->> JS: JSON produtos + categorias
-    JS ->> JS: renderCarrosseis() / renderChips()
-    UI ->> JS: usuário digita na busca / clica em chip
-    JS ->> JS: filtrarProdutos() (client-side)
-    JS ->> UI: ativarGrade() com resultado filtrado
-```
-
-## Diagrama de Sequência — **Checkout via Pix**
-```mermaid
-sequenceDiagram
-    participant Carrinho as telacarrinho.js
-    participant UI as telapagamento.html
-    participant JS as telapagamento.js
-    participant API as Express (server.js)
-    participant Util as utils/pagamentos.js
-    participant DB as MySQL
-
-    Carrinho ->> Carrinho: sessionStorage.setItem('pedidoPendente', itens)
-    Carrinho ->> UI: redireciona para telapagamento.html
-    UI ->> JS: lê 'pedidoPendente' do sessionStorage
-    JS ->> API: POST /pagamento/pix (usuario_id, itens)
-    API ->> DB: valida usuário/endereço, valida estoque
-    API ->> Util: gerarTxid() / gerarPayloadPix()
-    API ->> DB: INSERT em compra (status PENDENTE) por item
-    API ->> DB: UPDATE produtos (desconta estoque)
-    API -->> JS: retorna txid, pix_copia_cola, valor_total
-    JS ->> UI: renderiza QR Code / copia-e-cola
-    UI ->> JS: clique em "Já paguei" (simulação)
-    JS ->> API: POST /pagamento/pix/:txid/confirmar
-    API ->> DB: UPDATE compra SET status_pagamento igual PAGO
-    API -->> JS: confirmação
-    JS ->> UI: mostrarSucesso() + limpa carrinho
-```
-
-## Diagrama de Sequência — **Rastreio de Entrega**
-```mermaid
-sequenceDiagram
-    participant Pedidos as telacompras.html
-    participant UI as telarastreio.html
-    participant JS as telarastreio.js
-    participant API as Express (server.js)
-    participant Maps as Google Maps API
-
-    Pedidos ->> UI: clique em "Rastrear Envio" (?id=)
-    UI ->> JS: carregarRastreio(id)
-    JS ->> API: GET /pedido/:id/rastreio
-    API ->> API: calcula progresso_pct e eta_estimada
-    API -->> JS: retorna origem, destino_endereco, progresso_pct, status_entrega
-    JS ->> JS: montarStepper(status_entrega)
-    JS ->> Maps: Geocoding (endereço) + Directions (rota)
-    Maps -->> JS: rota + coordenadas
-    JS ->> UI: desenha rota e posiciona marcador do pacote
-```
